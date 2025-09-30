@@ -1,6 +1,6 @@
 # CRUDP - Binary CRUD Protocol
 
-Simple binary protocol for Go structs with automatic type detection.
+Simple binary protocol for Go structs with deterministic, shared handler registration.
 
 
 ```go
@@ -8,72 +8,75 @@ package crudp
 
 import (
 	"github.com/cdvelop/tinybin"
-	"github.com/cdvelop/tinyreflect"
+	. "github.com/cdvelop/tinystring"
 )
 
 // Interfaces CRUD separadas - los handlers pueden implementar solo las que necesiten
 type Creator interface {
-	Create(data ...any) ([]byte, error)
+	Create(data ...any) (any, error)
 }
 
 type Reader interface {
-	Read(data ...any) ([]byte, error)
+	Read(data ...any) (any, error)
 }
 
 type Updater interface {
-	Update(data ...any) ([]byte, error)
+	Update(data ...any) (any, error)
 }
 
 type Deleter interface {
-	Delete(data ...any) ([]byte, error)
+	Delete(data ...any) (any, error)
 }
 
-// CrudP maneja el registro y procesamiento automático de handlers
+// Constante para máximo número de handlers (optimizado para WebAssembly)
+const maxHandlers = 32
+
+// ActionHandlers agrupa las funciones CRUD para un índice de registro
+type ActionHandlers struct {
+	Create func(...any) (any, error)
+	Read   func(...any) (any, error)
+	Update func(...any) (any, error)
+	Delete func(...any) (any, error)
+}
+
+// CrudP maneja el procesamiento automático de handlers
+// Usa arrays fijos en lugar de maps para compatibilidad con TinyGo
 type CrudP struct {
-	handlers map[uint32]map[byte]func(...any) ([]byte, error) // [StructID][Action] -> Handler
+	handlers [maxHandlers]ActionHandlers // Handlers cargados por índice
+	count    uint8                      // Número de handlers registrados
 }
 
 // New crea una nueva instancia de CrudP
 func New() *CrudP {
-	return &CrudP{
-		handlers: make(map[uint32]map[byte]func(...any) ([]byte, error)),
-	}
+	return &CrudP{}
 }
 
 // Packet representa tanto solicitudes como respuestas del protocolo
 type Packet struct {
-	Action   byte      // acción: 'c' (create), 'r' (read), 'u' (update), 'd' (delete), 'e' (error)
-	StructID uint32    // identificador único de la estructura (obtenido automáticamente de tinyreflect)
-	Message  string    // información adicional (opcional en requests, usado en responses)
-	Data     [][]byte  // slice de datos codificados, cada []byte es una estructura
+	Action    byte     // acción: 'c', 'r', 'u', 'd', 'e'
+	HandlerID uint8    // índice compartido dentro del slice de registro
+	Message   string   // información adicional (opcional en requests, usado en responses)
+	Data      [][]byte // slice de datos codificados, cada []byte es una estructura
 }
 
-// EncodePacket codifica un paquete con detección automática de tipo
-func EncodePacket(action byte, message string, data ...any) ([]byte, error) {
-	var structID uint32
-	var encodedData [][]byte
-	
-	if len(data) > 0 && data[0] != nil {
-		typ := tinyreflect.TypeOf(data[0])
-		structID = typ.StructID()
-		
-		// Codificar cada estructura individualmente
-		for _, item := range data {
-			itemBytes, err := tinybin.Encode(item)
-			if err != nil {
-				return nil, err
-			}
-			encodedData = append(encodedData, itemBytes)
+// EncodePacket codifica un paquete para un handler ya conocido
+func EncodePacket(action byte, handlerID uint8, message string, data ...any) ([]byte, error) {
+	encoded := make([][]byte, 0, len(data))
+	for _, item := range data {
+		bytes, err := tinybin.Encode(item)
+		if err != nil {
+			return nil, err
 		}
+		encoded = append(encoded, bytes)
 	}
-	
+
 	packet := Packet{
-		Action:   action,
-		StructID: structID,
-		Message:  message,
-		Data:     encodedData,
+		Action:    action,
+		HandlerID: handlerID,
+		Message:   message,
+		Data:      encoded,
 	}
-	
+
 	return tinybin.Encode(packet)
 }
 
@@ -82,29 +85,44 @@ func DecodePacket(data []byte, packet *Packet) error {
 	return tinybin.Decode(data, packet)
 }
 
-// RegisterHandlers registra automáticamente los handlers para las estructuras dadas
-func (cp *CrudP) RegisterHandlers(structType any, handler any) error {
-	typ := tinyreflect.TypeOf(structType)
-	structID := typ.StructID()
-	
-	if cp.handlers[structID] == nil {
-		cp.handlers[structID] = make(map[byte]func(...any) ([]byte, error))
+// Load vincula los handlers compartidos con índices deterministas
+// Espera pares prototype, handler dentro del slice recibido.
+func (cp *CrudP) Load(registrations []any) error {
+	if len(registrations)%2 != 0 {
+		return Errf("registrations must be provided as pairs: prototype, handler")
 	}
-	
-	// Detectar y registrar métodos CRUD automáticamente del handler
+
+	count := len(registrations) / 2
+	if count > maxHandlers {
+		return Errf("maximum handler registrations exceeded: %d", maxHandlers)
+	}
+
+	for pair := 0; pair < count; pair++ {
+		handler := registrations[pair*2+1]
+		if handler == nil {
+			return Errf("registration %d has no handler", pair)
+		}
+		cp.bind(uint8(pair), handler)
+	}
+
+	cp.count = uint8(count)
+	return nil
+}
+
+// bind copia las funciones CRUD sin asignaciones dinámicas
+func (cp *CrudP) bind(index uint8, handler any) {
 	if creator, ok := handler.(Creator); ok {
-		cp.handlers[structID]['c'] = creator.Create
+		cp.handlers[index].Create = creator.Create
 	}
 	if reader, ok := handler.(Reader); ok {
-		cp.handlers[structID]['r'] = reader.Read
+		cp.handlers[index].Read = reader.Read
 	}
 	if updater, ok := handler.(Updater); ok {
-		cp.handlers[structID]['u'] = updater.Update
+		cp.handlers[index].Update = updater.Update
 	}
 	if deleter, ok := handler.(Deleter); ok {
-		cp.handlers[structID]['d'] = deleter.Delete
+		cp.handlers[index].Delete = deleter.Delete
 	}
-	return nil
 }
 
 // ProcessPacket procesa automáticamente un packet y llama al handler correspondiente
@@ -113,19 +131,7 @@ func (cp *CrudP) ProcessPacket(requestBytes []byte) ([]byte, error) {
 	if err := DecodePacket(requestBytes, &packet); err != nil {
 		return cp.createErrorResponse("decode_error", err)
 	}
-	
-	// Buscar handler por StructID y Action
-	structHandlers, exists := cp.handlers[packet.StructID]
-	if !exists {
-		return cp.createErrorResponse("no_handler", fmt.Errorf("no handler for StructID: %d", packet.StructID))
-	}
-	
-	handler, exists := structHandlers[packet.Action]
-	if !exists {
-		return cp.createErrorResponse("no_action", fmt.Errorf("action '%c' not supported for StructID: %d", packet.Action, packet.StructID))
-	}
-	
-	// Decodificar datos para el handler
+
 	var decodedData []any
 	for _, itemBytes := range packet.Data {
 		var item any
@@ -134,39 +140,78 @@ func (cp *CrudP) ProcessPacket(requestBytes []byte) ([]byte, error) {
 		}
 		decodedData = append(decodedData, item)
 	}
-	
-	// Llamar al handler
-	responseData, err := handler(decodedData...)
+
+	result, err := cp.callHandler(packet.HandlerID, packet.Action, decodedData...)
 	if err != nil {
 		return cp.createErrorResponse("handler_error", err)
 	}
-	
-	// Crear respuesta exitosa
-	responsePacket := Packet{
-		Action:   packet.Action, // Misma acción que la request
-		StructID: packet.StructID,
-		Message:  "success",
-		Data:     [][]byte{responseData}, // Response del handler
+
+	var responseData []byte
+	if bytes, ok := result.([]byte); ok {
+		responseData = bytes
+	} else {
+		responseData, err = tinybin.Encode(result)
+		if err != nil {
+			return cp.createErrorResponse("encode_error", err)
+		}
 	}
-	
+
+	responsePacket := Packet{
+		Action:    packet.Action,
+		HandlerID: packet.HandlerID,
+		Message:   "success",
+		Data:      [][]byte{responseData},
+	}
+
 	return tinybin.Encode(responsePacket)
+}
+
+// callHandler busca y llama directamente al handler por índice compartido
+func (cp *CrudP) callHandler(handlerID uint8, action byte, data ...any) (any, error) {
+	if handlerID >= cp.count {
+		return nil, Errf("no handler found for id: %d", handlerID)
+	}
+
+	handler := cp.handlers[handlerID]
+
+	switch action {
+	case 'c':
+		if handler.Create != nil {
+			return handler.Create(data...)
+		}
+	case 'r':
+		if handler.Read != nil {
+			return handler.Read(data...)
+		}
+	case 'u':
+		if handler.Update != nil {
+			return handler.Update(data...)
+		}
+	case 'd':
+		if handler.Delete != nil {
+			return handler.Delete(data...)
+		}
+	}
+
+	return nil, Errf("action '%c' not implemented for handler id: %d", action, handlerID)
 }
 
 // createErrorResponse crea una respuesta de error eficiente
 func (cp *CrudP) createErrorResponse(message string, err error) ([]byte, error) {
-	errorPacket := Packet{
-		Action:   'e',
-		StructID: 0,
-		Message:  fmt.Sprintf("%s: %v", message, err),
-		Data:     nil,
+	errorMsg := Errf("%s: %v", message, err).Error()
+	packet := Packet{
+		Action:    'e',
+		HandlerID: 0,
+		Message:   errorMsg,
+		Data:      nil,
 	}
-	return tinybin.Encode(errorPacket)
+	return tinybin.Encode(packet)
 }
 
 // DecodeData decodifica los datos del paquete
 func DecodeData(packet *Packet, index int, target any) error {
 	if index >= len(packet.Data) {
-		return errors.New("index out of range")
+		return Errf("index out of range")
 	}
 	return tinybin.Decode(packet.Data[index], target)
 }
@@ -174,127 +219,142 @@ func DecodeData(packet *Packet, index int, target any) error {
 
 ## Ejemplo de Uso
 
+La registración se declara **una sola vez** y se comparte entre cliente (TinyGo/WASM) y servidor.
+
+```
+app/
+	register.go
+	config.go
+	main.server.go
+	main.wasm.go
+```
+
+### register.go — registro centralizado
+
+```go
+package app
+
+import "github.com/cdvelop/crudp"
+
+type User struct {
+	ID    int
+	Name  string
+	Email string
+}
+
+type Product struct {
+	ID    int
+	Name  string
+	Price float64
+}
+
+type UserHandler struct{}
+
+func (UserHandler) Create(data ...any) (any, error) {
+	created := make([]User, 0, len(data))
+	for _, item := range data {
+		user := item.(User)
+		user.ID = 123
+		created = append(created, user)
+	}
+	return created, nil
+}
+
+func (UserHandler) Read(data ...any) (any, error) {
+	results := make([]User, 0, len(data))
+	for _, item := range data {
+		user := item.(User)
+		results = append(results, User{ID: user.ID, Name: "Found " + user.Name, Email: user.Email})
+	}
+	return results, nil
+}
+
+type ProductHandler struct{}
+
+// ...implementaciones opcionales de CRUD...
+
+// Pares: prototipo cero-valor seguido del handler correspondiente
+var HandlersRegistration = []any{
+	User{}, &UserHandler{},
+	Product{}, &ProductHandler{},
+}
+
+const (
+	HandlerUser uint8 = iota
+	HandlerProduct
+)
+```
+
+Los identificadores `HandlerUser` y `HandlerProduct` se derivan del orden en el slice. Si prefieres minimizar riesgos humanos, puedes generar este bloque con `//go:generate`.
+
+La tabla `HandlersRegistration` alterna **prototipo cero-valor** seguido de **handler**. `Load()` recorre el slice en pasos de dos entradas y asigna los índices compartidos (`uint8`) de izquierda a derecha.
+
+### config.go — inicialización compartida
+
+```go
+package app
+
+import "github.com/cdvelop/crudp"
+
+var Protocol = crudp.New()
+
+func init() {
+	if err := Protocol.Load(HandlersRegistration); err != nil {
+		panic(err)
+	}
+}
+```
+
+### main.server.go — servidor estándar
+
 ```go
 package main
 
 import (
 	"io"
 	"net/http"
-	
+
 	"github.com/cdvelop/crudp"
+	"github.com/your/app"
 )
 
-type User struct {
-	ID    int    
-	Name  string 
-	Email string 
-}
-
-// Implementa StructNamer para tinyreflect
-func (User) StructName() string {
-	return "user"
-}
-
-type Product struct {
-	ID    int     
-	Name  string  
-	Price float64
-}
-
-// Implementa StructNamer para tinyreflect
-func (Product) StructName() string {
-	return "product"
-}
-
-// UserHandler implementa las operaciones CRUD que necesita
-type UserHandler struct{}
-
-func (uh *UserHandler) Create(data ...any) ([]byte, error) {
-	var created []User
-	for _, item := range data {
-		user := item.(User) // Casting manual como esperabas
-		// Lógica de creación: insertar en BD, validar, etc.
-		user.ID = 123 // Ejemplo: asignar ID generado
-		created = append(created, user)
-	}
-	return tinybin.Encode(created)
-}
-
-func (uh *UserHandler) Read(data ...any) ([]byte, error) {
-	var results []User
-	for _, item := range data {
-		user := item.(User)
-		// Lógica de búsqueda: SELECT * FROM users WHERE id = user.ID
-		foundUser := User{ID: user.ID, Name: "Found: " + user.Name, Email: user.Email}
-		results = append(results, foundUser)
-	}
-	return tinybin.Encode(results)
-}
-
 func main() {
-	// 1. Setup del servidor (una vez al iniciar)
-	cp := crudp.New()
-	userHandler := &UserHandler{}
-	
-	// Registro automático: CRUDP detecta que UserHandler implementa Creator y Reader
-	cp.RegisterHandlers(User{}, userHandler) // Asocia User struct con UserHandler
-	
-	// 2. Handler HTTP (esto se ejecuta por cada request)
 	http.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
-		// Leer request body (bytes del Packet)
-		requestBytes, _ := io.ReadAll(r.Body)
-		
-		// CRUDP procesa automáticamente:
-		// - Decodifica Packet
-		// - Busca handler por StructID 
-		// - Decodifica Data
-		// - Llama al método correspondiente (Create/Read/Update/Delete)
-		// - Codifica respuesta
-		responseBytes, err := cp.ProcessPacket(requestBytes)
+		payload, _ := io.ReadAll(r.Body)
+		response, err := app.Protocol.ProcessPacket(payload)
 		if err != nil {
-			http.Error(w, err.Error(), 500)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		
-		// Enviar respuesta
+
 		w.Header().Set("Content-Type", "application/octet-stream")
-		w.Write(responseBytes)
+		w.Write(response)
 	})
-	
-	// 3. Cliente envía request
-	// POST /api con Packet codificado:
-	// Action: 'c' (create)  
-	// StructID: [ID automático de User]
-	// Data: [User{Name: "Juan", Email: "juan@test.com"}]
-	//
-	// CRUDP automáticamente:
-	// 1. Decodifica el Packet
-	// 2. Ve StructID de User y Action 'c'  
-	// 3. Busca UserHandler.Create
-	// 4. Decodifica Data como []User
-	// 5. Llama userHandler.Create(user)
-	// 6. Codifica respuesta y la retorna
-}
-	
-	// Respuesta con mensaje - reutilizar los mismos datos
-	responseBytes, err := crudp.EncodePacket('r', "Usuarios encontrados",
-		User{ID: 1, Name: "Juan", Email: "juan@test.com"},
-		User{ID: 2, Name: "Ana", Email: "ana@test.com"},
-	)
-	if err != nil {
-		panic(err)
-	}
-	
-	var response crudp.Packet
-	if err := crudp.DecodePacket(responseBytes, &response); err != nil {
-		panic(err)
-	}
-	
-	// response.Action = 'r' (misma acción)
-	// response.Message = "success"
-	// response.Data contiene el resultado del handler
+
+	http.ListenAndServe(":8080", nil)
 }
 ```
+
+### main.wasm.go — cliente TinyGo/WebAssembly
+
+```go
+package main
+
+import (
+	"github.com/cdvelop/crudp"
+	"github.com/your/app"
+)
+
+func sendCreate(user app.User) ([]byte, error) {
+	return crudp.EncodePacket('c', app.HandlerUser, "", user)
+}
+
+func readUsers(id int) ([]byte, error) {
+	return crudp.EncodePacket('r', app.HandlerUser, "", app.User{ID: id})
+}
+```
+
+Ambos binarios comparten el **mismo slice** `HandlersRegistration`, por lo que el índice `HandlerUser` siempre significa lo mismo, sin necesidad de `StructID` ni `StructName`.
 
 ## Características Principales
 
@@ -304,9 +364,9 @@ CRUDP sigue la filosofía minimalista con:
 - ✅ **Compatibilidad TinyGo** - Sin problemas de compilación  
 - 🎯 **Rendimiento predecible** - Sin asignaciones ocultas
 - 🔧 **API mínima** - Solo operaciones esenciales
-- 🔍 **Identificación única** - StructID garantiza identificación sin colisiones
+- 🔍 **Identificación determinista** - Índices compartidos garantizan el mismo handler en cliente y servidor
 - 💪 **Tipado fuerte** - Estructuras Go directas, no maps
-- ⚡ **Eficiencia** - uint32 vs string, menor uso de memoria
+- ⚡ **Eficiencia** - IDs compactos (`uint8`) y tabla fija sin maps dinámicos
 
 ### Tipos de Datos Compatibles (Enfoque Minimalista)
 
@@ -335,7 +395,7 @@ Este enfoque enfocado asegura un tamaño de código mínimo mientras cubre las o
 
 ### ✅ Ventajas del Diseño
 
-- **🎯 Registro automático** - `RegisterHandlers` detecta interfaces implementadas
+- **🎯 Registro centralizado** - `Load()` copia las interfaces desde un único slice compartido (cliente/servidor)
 - **🔧 Interfaces flexibles** - Implementa solo Create, Read, Update o Delete según necesites
 - **⚡ Procesamiento eficiente** - `ProcessPacket` maneja todo automáticamente
 - **🛡️ Manejo de errores robusto** - Errores se convierten automáticamente en responses
@@ -345,41 +405,45 @@ Este enfoque enfocado asegura un tamaño de código mínimo mientras cubre las o
 
 ### ⚠️ Consideraciones
 
-- **Casting manual requerido** - Handlers deben hacer `item.(Type)` - Garantiza type safety
-- **Registro explícito necesario** - Debes llamar `RegisterHandlers` - Control total sobre qué se registra  
-- **Un handler por StructID** - Ultima registración sobrescribe - Diseño simple y predecible
+- **Slice compartido obligatorio** - Cliente y servidor deben importar la misma tabla de registro para que los índices coincidan
+- **Casting manual requerido** - Handlers deben hacer `item.(Type)`; la seguridad de tipos queda bajo tu control
+- **IDs deterministas** - Una nueva versión del registro debe mantener el orden u ofrecer constantes generadas automáticamente
 
-## Sistema de Handlers Automáticos
+### 🎯 Handlers Desacoplados (Retornan `any`)
 
-### ✅ Ventajas del Diseño
+- **🔧 Sin dependencia de tinybin** - Handlers no necesitan importar ni conocer tinybin
+- **⚡ Menos trabajo** - Solo retornan estructuras Go, CRUDP codifica automáticamente
+- **🧪 Testing fácil** - Handlers se testean independientemente sin CRUDP
+- **📦 API natural** - `return users, nil` en lugar de `return tinybin.Encode(users)`
+- **🔄 Flexibilidad** - Si necesita control especial, puede retornar `[]byte` directamente
 
-- **🎯 Registro automático** - `RegisterHandlers` detecta interfaces implementadas
-- **🔧 Interfaces flexibles** - Implementa solo Create, Read, Update o Delete según necesites
-- **⚡ Procesamiento eficiente** - `ProcessPacket` maneja todo automáticamente
-- **🛡️ Manejo de errores robusto** - Errores se convierten automáticamente en responses
-- **🏆 Testeable** - Constructor `New()` permite testing aislado
-- **🔄 Caching HTTP** - Instancia CrudP se puede cachear en handlers HTTP
-- **💪 Cero allocaciones innecesarias** - Handlers generan responses directamente
+### ⚡ Optimización TinyGo/WebAssembly
 
-### ⚠️ Consideraciones
+- **🏗️ Arrays fijos** - Sin maps, usa `[32]ActionHandlers` para cero asignaciones
+- **🎯 Llamadas directas** - `callHandler()` evita asignaciones de variables de función
+- **💾 Memoria predecible** - Tamaño fijo conocido en tiempo de compilación
+- **🔍 Búsqueda O(n)** - Eficiente para 5-15 tipos típicos en WebAssembly
+- **✅ Compatible TinyGo** - Sin características problemáticas de maps dinámicos
 
-- **Casting manual requerido** - Handlers deben hacer `item.(Type)` - Garantiza type safety
-- **Registro explícito necesario** - Debes llamar `RegisterHandlers` - Control total sobre qué se registra  
-- **Un handler por StructID** - Ultima registración sobrescribe - Diseño simple y predecible
+## Por qué índices compartidos en lugar de `StructID`
 
-## Por qué StructID en lugar de nombres
+Abandonar `StructID` simplifica la arquitectura cuando controlas el registro en un único lugar.
 
-**StructID ofrece identificación superior:**
+### Ventajas
 
-- **✅ Sin colisiones** - Hash único del runtime de Go garantiza identificación
-- **✅ Automático** - No requiere implementar StructNamer ni interfaces manuales  
-- **✅ Eficiente** - uint32 (4 bytes) vs strings (N bytes)
-- **✅ Consistente** - Misma estructura = mismo ID independiente de inicialización
-- **✅ Compatible TinyGo** - Usa información del runtime existente
-- **❌ Nombres pueden** - Colisionar entre paquetes, tener typos, requerir interfaces
+- **Simetría total** – El mismo slice de registro se compila en el binario WASM y en el servidor nativo.
+- **Constantes explícitas** – Los valores `uint8` son conocidos en tiempo de compilación; puedes exportarlos o generarlos.
+- **Sin reflection** – No se requiere `tinyreflect`; compatible con TinyGo y builds restringidos.
+- **Detección rápida de errores** – Cualquier des-sincronización se captura en tests que comparen la tabla compartida.
+
+### Desventajas y mitigaciones
+
+- **Mantenimiento del orden** – Cambiar el orden del slice cambia los IDs. Mantén el registro en un paquete único y versionado.
+- **Generación de IDs** – Considera `//go:generate` para producir las constantes a partir del slice y evitar errores humanos.
+- **Migraciones coordinadas** – Cliente y servidor deben actualizarse juntos cuando se agregan entradas.
 
 ### Arquitectura
 
-- **`tinybin`**: Codificación/decodificación binaria
-- **`tinyreflect`**: Detección de tipos únicos con StructID
-- **`crudp`**: Lógica del protocolo CRUD
+- **`tinybin`**: Codificación/decodificación binaria compacta
+- **`crudp`**: Lógica del protocolo CRUD, tablas fijas y manejo de errores
+- **`app/register.go`**: Fuente única de verdad para `HandlersRegistration` y los IDs exportados
