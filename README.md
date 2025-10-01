@@ -1,4 +1,4 @@
-# crudp
+# CRUDP
 
 A simple binary CRUD protocol for Go structs with deterministic, shared handler registration.
 
