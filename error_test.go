@@ -14,7 +14,7 @@ func TestCrudP_ErrorHandling(t *testing.T) {
 	}
 
 	// Test with non-existent handler
-	invalidHandlerPacket, err := EncodePacket('c', 99, "", &User{Name: "Test"})
+	invalidHandlerPacket, err := cp.EncodePacket('c', 99, "", &User{Name: "Test"})
 	if err != nil {
 		t.Fatalf("Failed to encode packet: %v", err)
 	}

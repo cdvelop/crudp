@@ -42,7 +42,7 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 	}
 
 	// Test Create operation
-	createPacket, err := EncodePacket('c', 0, "", &User{Name: "John", Email: "john@example.com"})
+	createPacket, err := cp.EncodePacket('c', 0, "", &User{Name: "John", Email: "john@example.com"})
 	if err != nil {
 		t.Fatalf("Failed to encode create packet: %v", err)
 	}
@@ -67,7 +67,7 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 	}
 
 	// Test Read operation
-	readPacket, err := EncodePacket('r', 0, "", &User{ID: 123})
+	readPacket, err := cp.EncodePacket('r', 0, "", &User{ID: 123})
 	if err != nil {
 		t.Fatalf("Failed to encode read packet: %v", err)
 	}

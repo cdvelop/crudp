@@ -12,14 +12,6 @@ type Packet struct {
 	Data      [][]byte // slice of encoded data, each []byte is a structure
 }
 
-// EncodePacket encodes a packet for a known handler
-// This method creates a temporary CrudP instance to use its TinyBin instance
-func EncodePacket(action byte, handlerID uint8, message string, data ...any) ([]byte, error) {
-	// Create a temporary CrudP instance to use its TinyBin instance
-	cp := New()
-	return cp.EncodePacket(action, handlerID, message, data...)
-}
-
 // EncodePacket encodes a packet for a known handler using this CrudP's TinyBin instance
 func (cp *CrudP) EncodePacket(action byte, handlerID uint8, message string, data ...any) ([]byte, error) {
 	encoded := make([][]byte, 0, len(data))
