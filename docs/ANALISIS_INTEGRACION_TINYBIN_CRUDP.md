@@ -13,11 +13,11 @@ Solución mínima y efectiva para integrar TinyBin con CRUD P, aprovechando el c
 
 ## Solución Mínima Efectiva
 
-### 1. ActionHandler con Tipo Cacheado
+### 1. actionHandler con Tipo Cacheado
 
 **Actual:**
 ```go
-type ActionHandler struct {
+type actionHandler struct {
     Create func(...any) (any, error)
     Read   func(...any) (any, error)
     Update func(...any) (any, error)
@@ -29,7 +29,7 @@ type ActionHandler struct {
 
 **Propuesto:**
 ```go
-type ActionHandler struct {
+type actionHandler struct {
     Create func(...any) (any, error)
     Read   func(...any) (any, error)
     Update func(...any) (any, error)
@@ -45,14 +45,14 @@ type ActionHandler struct {
 **Actual:**
 ```go
 type CrudP struct {
-    handlers []ActionHandler
+    handlers []actionHandler
 }
 ```
 
 **Propuesto:**
 ```go
 type CrudP struct {
-    handlers []ActionHandler
+    handlers []actionHandler
     tinyBin  *tinybin.TinyBin // ✅ Instancia dedicada
 }
 ```
@@ -62,7 +62,7 @@ type CrudP struct {
 **Función propuesta:**
 ```go
 func (cp *CrudP) LoadHandlers(handlers ...any) error {
-    cp.handlers = make([]ActionHandler, len(handlers))
+    cp.handlers = make([]actionHandler, len(handlers))
 
     for index, handler := range handlers {
         // ✅ 1. Extraer tipo manejado por el handler
@@ -119,7 +119,7 @@ func (cp *CrudP) ProcessPacket(requestBytes []byte) ([]byte, error) {
         return cp.createErrorResponse("decode_error", err)
     }
 
-    // ✅ Usar tipo conocido desde ActionHandler
+    // ✅ Usar tipo conocido desde actionHandler
     handler := cp.handlers[packet.HandlerID]
     decodedData, err := cp.decodeWithKnownType(&packet, handler.Type)
     if err != nil {
@@ -196,9 +196,9 @@ response, err := cp.ProcessPacket(requestBytes)
 
 ## Implementación por Fases
 
-### Fase 1: Campo Type en ActionHandler (1 día)
+### Fase 1: Campo Type en actionHandler (1 día)
 ```go
-type ActionHandler struct {
+type actionHandler struct {
     // ... campos existentes ...
     Type *tinyreflect.Type // ✅ Agregar este campo
 }
@@ -226,7 +226,7 @@ func (cp *CrudP) ProcessPacket(requestBytes []byte) ([]byte, error) {
 
 ### **Comentario en crudp.go línea 10:**
 ```go
-type ActionHandler struct {
+type actionHandler struct {
     // ... funciones existentes ...
     Type *tinyreflect.Type // ✅ IMPLEMENTADO - Campo único para tipo conocido
 }

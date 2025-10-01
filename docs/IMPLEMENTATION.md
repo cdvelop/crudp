@@ -25,8 +25,8 @@ type Deleter interface {
 	Delete(data ...any) (any, error)
 }
 
-// ActionHandler groups the CRUD functions for a record index
-type ActionHandler struct {
+// actionHandler groups the CRUD functions for a record index
+type actionHandler struct {
 	Create func(...any) (any, error)
 	Read   func(...any) (any, error)
 	Update func(...any) (any, error)
@@ -36,7 +36,7 @@ type ActionHandler struct {
 // CrudP handles automatic processing of handlers
 // Uses slices instead of maps for TinyGo compatibility
 type CrudP struct {
-	handlers []ActionHandler // Dynamic table of handlers shared by index
+	handlers []actionHandler // Dynamic table of handlers shared by index
 }
 
 // New creates a new CrudP instance
@@ -81,7 +81,7 @@ func DecodePacket(data []byte, packet *Packet) error {
 // LoadHandlers prepares the shared handler table between client and server
 // Receives the real implementations that act as prototypes and handlers.
 func (cp *CrudP) LoadHandlers(handlers ...any) error {
-	cp.handlers = make([]ActionHandler, len(handlers))
+	cp.handlers = make([]actionHandler, len(handlers))
 	
 	for index, handler := range handlers {
 		if handler == nil {
