@@ -1,7 +1,8 @@
 package crudp
 
 import (
-	"github.com/cdvelop/tinyreflect"
+	"reflect"
+
 	. "github.com/cdvelop/tinystring"
 )
 
@@ -88,13 +89,13 @@ func (cp *CrudP) decodeWithKnownType(packet *Packet, handlerID uint8) ([]any, er
 	}
 
 	// Get the handler type to determine what concrete type to decode to
-	handlerValue := tinyreflect.ValueOf(handler)
+	handlerValue := reflect.ValueOf(handler)
 	handlerType := handlerValue.Type()
 
-	var concreteType *tinyreflect.Type
+	var concreteType reflect.Type
 
 	// If handler is a pointer (e.g., &User{}), get the element type (User)
-	if handlerType.Kind().String() == "ptr" {
+	if handlerType.Kind() == reflect.Ptr {
 		concreteType = handlerType.Elem()
 	} else {
 		// If handler is a value type, use it directly

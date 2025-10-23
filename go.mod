@@ -1,16 +1,12 @@
 module github.com/cdvelop/crudp
 
-go 1.24.4
+go 1.25.2
 
 require (
-	github.com/cdvelop/tinybin v0.2.0
-	github.com/cdvelop/tinystring v0.8.1
+	github.com/cdvelop/tinybin v0.2.2
+	github.com/cdvelop/tinystring v0.9.0
 )
 
-require github.com/cdvelop/tinyreflect v0.2.2 // indirect
-
 replace github.com/cdvelop/tinybin => ../tinybin
-
-replace github.com/cdvelop/tinyreflect => ../tinyreflect
 
 replace github.com/cdvelop/tinystring => ../tinystring

@@ -1,2 +1,5 @@
 crudp.test
 mem.out
+example/pwa/theme
+example/pwa/main.server
+example/*.log
