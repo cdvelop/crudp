@@ -3,3 +3,4 @@ mem.out
 example/pwa/theme
 example/pwa/main.server
 example/*.log
+*.code-workspace
