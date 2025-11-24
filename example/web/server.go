@@ -1,15 +1,15 @@
 //go:build !wasm
-// +build !wasm
 
 package main
 
 import (
+	"context"
 	"io"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/cdvelop/crudp/example/modules"
+	"github.com/cdvelop/crudp/example/pkg/router"
 )
 
 func main() {
@@ -44,10 +44,13 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/", noCache(fs))
 
-	// API endpoint for TinyBin protocol
+	// Initialize CRUDP router
+	cp := router.NewRouter()
+
+	// API endpoint for CRUDP protocol
 	mux.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
 		payload, _ := io.ReadAll(r.Body)
-		response, err := modules.Protocol.ProcessPacket(payload)
+		response, err := cp.ProcessPacket(context.Background(), payload)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -59,7 +62,7 @@ func main() {
 
 	// Create http.Server with Addr and Handler set
 	server := &http.Server{
-		Addr:    ":4430",
+		Addr:    ":6060",
 		Handler: mux,
 	}
 

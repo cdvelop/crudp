@@ -75,7 +75,7 @@ Using `go test -memprofile=mem.out -bench=.` and `go tool pprof`, we identified 
 | **`(*CrudP).ProcessPacket`** | 0.34GB | 2.66% | 2.50GB | **HIGH PRIORITY** |
 | **`(*CrudP).EncodePacket`** | 0.33GB | 2.60% | 1.88GB | **HIGH PRIORITY** |
 | **`(*CrudP).bind`** | 0.27GB | 2.11% | 0.27GB | **MEDIUM PRIORITY** |
-| **`(*CrudP).LoadHandlers`** | 0.13GB | 1.01% | 0.40GB | **MEDIUM PRIORITY** |
+| **`(*CrudP).RegisterHandler`** | 0.13GB | 1.01% | 0.40GB | **MEDIUM PRIORITY** |
 | **`(*CrudP).decodeWithKnownType`** | 0.06GB | 0.44% | 0.23GB | **MEDIUM PRIORITY** |
 
 ### Compile-Time Allocation Analysis
@@ -105,7 +105,7 @@ Using `go test -memprofile=mem.out -bench=.` and `go tool pprof`, we identified 
    - Packet encoding with tinybin
    - Buffer and slice operations
 
-6. **`(*CrudP).LoadHandlers`**: Cost 178 - **HIGH PRIORITY**
+6. **`(*CrudP).RegisterHandler`**: Cost 178 - **HIGH PRIORITY**
    - Handler registration logic
    - Interface binding complexity
 

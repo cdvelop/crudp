@@ -1,6 +1,7 @@
 package crudp
 
 import (
+	"context"
 	"testing"
 )
 
@@ -72,8 +73,8 @@ func BenchmarkCrudP_Setup(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		cp = New()
-		if err := cp.LoadHandlers(&BenchUser{}); err != nil {
-			b.Fatalf("LoadHandlers failed: %v", err)
+		if err := cp.RegisterHandler(&BenchUser{}); err != nil {
+			b.Fatalf("RegisterHandler failed: %v", err)
 		}
 	}
 
@@ -83,8 +84,8 @@ func BenchmarkCrudP_Setup(b *testing.B) {
 // BenchmarkCrudP_EncodePacket measures allocations for packet encoding
 func BenchmarkCrudP_EncodePacket(b *testing.B) {
 	cp := New()
-	if err := cp.LoadHandlers(&BenchUser{}); err != nil {
-		b.Fatalf("LoadHandlers failed: %v", err)
+	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
+		b.Fatalf("RegisterHandler failed: %v", err)
 	}
 
 	var packet []byte
@@ -106,8 +107,8 @@ func BenchmarkCrudP_EncodePacket(b *testing.B) {
 // BenchmarkCrudP_ProcessPacket measures allocations for complete packet processing
 func BenchmarkCrudP_ProcessPacket(b *testing.B) {
 	cp := New()
-	if err := cp.LoadHandlers(&BenchUser{}); err != nil {
-		b.Fatalf("LoadHandlers failed: %v", err)
+	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
+		b.Fatalf("RegisterHandler failed: %v", err)
 	}
 
 	// Pre-encode a packet to process
@@ -122,7 +123,7 @@ func BenchmarkCrudP_ProcessPacket(b *testing.B) {
 	b.ReportAllocs()
 
 	for i := 0; i < b.N; i++ {
-		response, err = cp.ProcessPacket(packet)
+		response, err = cp.ProcessPacket(context.Background(), packet)
 		if err != nil {
 			b.Fatalf("ProcessPacket failed: %v", err)
 		}
@@ -134,8 +135,8 @@ func BenchmarkCrudP_ProcessPacket(b *testing.B) {
 // BenchmarkCrudP_FullCycle measures allocations for complete encode->process->decode cycle
 func BenchmarkCrudP_FullCycle(b *testing.B) {
 	cp := New()
-	if err := cp.LoadHandlers(&BenchUser{}); err != nil {
-		b.Fatalf("LoadHandlers failed: %v", err)
+	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
+		b.Fatalf("RegisterHandler failed: %v", err)
 	}
 
 	var packet []byte
@@ -154,7 +155,7 @@ func BenchmarkCrudP_FullCycle(b *testing.B) {
 		}
 
 		// Process request
-		response, err = cp.ProcessPacket(packet)
+		response, err = cp.ProcessPacket(context.Background(), packet)
 		if err != nil {
 			b.Fatalf("ProcessPacket failed: %v", err)
 		}
@@ -172,8 +173,8 @@ func BenchmarkCrudP_FullCycle(b *testing.B) {
 // BenchmarkCrudP_MultipleUsers measures allocations with multiple users in one packet
 func BenchmarkCrudP_MultipleUsers(b *testing.B) {
 	cp := New()
-	if err := cp.LoadHandlers(&BenchUser{}); err != nil {
-		b.Fatalf("LoadHandlers failed: %v", err)
+	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
+		b.Fatalf("RegisterHandler failed: %v", err)
 	}
 
 	users := []*BenchUser{
@@ -197,7 +198,7 @@ func BenchmarkCrudP_MultipleUsers(b *testing.B) {
 		}
 
 		// Process packet
-		response, err = cp.ProcessPacket(packet)
+		response, err = cp.ProcessPacket(context.Background(), packet)
 		if err != nil {
 			b.Fatalf("ProcessPacket failed: %v", err)
 		}
@@ -209,8 +210,8 @@ func BenchmarkCrudP_MultipleUsers(b *testing.B) {
 // BenchmarkCrudP_AllOperations measures allocations for all CRUD operations
 func BenchmarkCrudP_AllOperations(b *testing.B) {
 	cp := New()
-	if err := cp.LoadHandlers(&BenchUser{}); err != nil {
-		b.Fatalf("LoadHandlers failed: %v", err)
+	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
+		b.Fatalf("RegisterHandler failed: %v", err)
 	}
 
 	operations := []byte{'c', 'r', 'u', 'd'}
@@ -228,7 +229,7 @@ func BenchmarkCrudP_AllOperations(b *testing.B) {
 			}
 
 			// Process packet
-			response, err = cp.ProcessPacket(packet)
+			response, err = cp.ProcessPacket(context.Background(), packet)
 			if err != nil {
 				b.Fatalf("ProcessPacket failed for operation %c: %v", op, err)
 			}
@@ -241,8 +242,8 @@ func BenchmarkCrudP_AllOperations(b *testing.B) {
 // BenchmarkCrudP_LargePayload measures allocations with larger string data
 func BenchmarkCrudP_LargePayload(b *testing.B) {
 	cp := New()
-	if err := cp.LoadHandlers(&BenchUser{}); err != nil {
-		b.Fatalf("LoadHandlers failed: %v", err)
+	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
+		b.Fatalf("RegisterHandler failed: %v", err)
 	}
 
 	// Create user with large strings
@@ -264,7 +265,7 @@ func BenchmarkCrudP_LargePayload(b *testing.B) {
 			b.Fatalf("EncodePacket failed: %v", err)
 		}
 
-		response, err = cp.ProcessPacket(packet)
+		response, err = cp.ProcessPacket(context.Background(), packet)
 		if err != nil {
 			b.Fatalf("ProcessPacket failed: %v", err)
 		}

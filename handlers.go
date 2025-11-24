@@ -1,14 +1,15 @@
 package crudp
 
 import (
+	"context"
 	"reflect"
 
 	. "github.com/cdvelop/tinystring"
 )
 
-// LoadHandlers prepares the shared handler table between client and server
+// RegisterHandler prepares the shared handler table between client and server
 // Receives the real implementations that act as prototypes and handlers.
-func (cp *CrudP) LoadHandlers(handlers ...any) error {
+func (cp *CrudP) RegisterHandler(handlers ...any) error {
 	cp.handlers = make([]actionHandler, len(handlers))
 
 	for index, handler := range handlers {
@@ -42,7 +43,7 @@ func (cp *CrudP) bind(index uint8, handler any) {
 }
 
 // callHandler searches and calls the handler directly by shared index
-func (cp *CrudP) callHandler(handlerID uint8, action byte, data ...any) (any, error) {
+func (cp *CrudP) callHandler(ctx context.Context, handlerID uint8, action byte, data ...any) (any, error) {
 	if int(handlerID) >= len(cp.handlers) {
 		return nil, Errf("no handler found for id: %d", handlerID)
 	}
@@ -52,19 +53,19 @@ func (cp *CrudP) callHandler(handlerID uint8, action byte, data ...any) (any, er
 	switch action {
 	case 'c':
 		if handler.Create != nil {
-			return handler.Create(data...)
+			return handler.Create(ctx, data...)
 		}
 	case 'r':
 		if handler.Read != nil {
-			return handler.Read(data...)
+			return handler.Read(ctx, data...)
 		}
 	case 'u':
 		if handler.Update != nil {
-			return handler.Update(data...)
+			return handler.Update(ctx, data...)
 		}
 	case 'd':
 		if handler.Delete != nil {
-			return handler.Delete(data...)
+			return handler.Delete(ctx, data...)
 		}
 	}
 

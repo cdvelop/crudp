@@ -1,6 +1,7 @@
 package crudp
 
 import (
+	"context"
 	"testing"
 )
 
@@ -13,7 +14,7 @@ func TestHandlerInstanceReuse(t *testing.T) {
 		t.Logf("DEBUG: %v", msg)
 	}
 	cp := New(log)
-	if err := cp.LoadHandlers(&User{}); err != nil {
+	if err := cp.RegisterHandler(&User{}); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)
 	}
 
@@ -33,13 +34,13 @@ func TestHandlerInstanceReuse(t *testing.T) {
 	}
 
 	// Process first packet
-	response1, err := cp.ProcessPacket(packet1)
+	response1, err := cp.ProcessPacket(context.Background(), packet1)
 	if err != nil {
 		t.Fatalf("Failed to process first packet: %v", err)
 	}
 
 	// Process second packet
-	response2, err := cp.ProcessPacket(packet2)
+	response2, err := cp.ProcessPacket(context.Background(), packet2)
 	if err != nil {
 		t.Fatalf("Failed to process second packet: %v", err)
 	}
@@ -109,7 +110,7 @@ func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
 
 	// Create a handler with initial state
 	originalHandler := &User{ID: 999, Name: "OriginalHandler", Email: "original@test.com"}
-	if err := cp.LoadHandlers(originalHandler); err != nil {
+	if err := cp.RegisterHandler(originalHandler); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)
 	}
 
@@ -122,7 +123,7 @@ func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
 		t.Fatalf("Failed to encode packet: %v", err)
 	}
 
-	response, err := cp.ProcessPacket(packet)
+	response, err := cp.ProcessPacket(context.Background(), packet)
 	if err != nil {
 		t.Fatalf("Failed to process packet: %v", err)
 	}
@@ -164,7 +165,7 @@ func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
 // TestConcurrentHandlerAccess tests if concurrent access to handlers causes issues
 func TestConcurrentHandlerAccess(t *testing.T) {
 	cp := New()
-	if err := cp.LoadHandlers(&User{}); err != nil {
+	if err := cp.RegisterHandler(&User{}); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)
 	}
 
@@ -184,7 +185,7 @@ func TestConcurrentHandlerAccess(t *testing.T) {
 			t.Fatalf("Failed to encode packet %d: %v", i, err)
 		}
 
-		response, err := cp.ProcessPacket(packet)
+		response, err := cp.ProcessPacket(context.Background(), packet)
 		if err != nil {
 			t.Fatalf("Failed to process packet %d: %v", i, err)
 		}

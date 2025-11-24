@@ -154,13 +154,13 @@ func New() *CrudP {
 ```go
 // ✅ DO: Reuse instances
 cp := New()
-cp.LoadHandlers(&User{})
+cp.RegisterHandler(&User{})
 // Use cp for multiple operations
 
 // ❌ DON'T: Create new instances repeatedly
 for i := 0; i < 1000; i++ {
     cp := New() // Creates 1000 instances!
-    cp.LoadHandlers(&User{})
+    cp.RegisterHandler(&User{})
 }
 ```
 

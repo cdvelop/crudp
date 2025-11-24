@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant C as Cliente (TinyGo)
+    participant R as Router (HTTP)
+    participant Q as Job Queue
+    participant H as Module Handler
+    participant S as SSE Broker
+
+    Note over C: Usuario sube foto y crea registro
+
+    C->>R: POST /sync (Batch: [Create User, Upload Photo])
+    Note right of C: Incluye []byte de foto
+    
+    R->>R: Valida Auth
+    R->>Q: Encola {Ctx, BatchData}
+    R-->>C: 202 Accepted
+    
+    loop Async Worker
+        Q->>H: Procesa Tarea
+        H->>H: Decodifica Foto ([]byte)
+        H->>H: Guarda en Disco/S3
+        H->>H: Guarda User en DB
+        
+        H->>S: Broker.Send(UserID, BatchResult)
+    end
+
+    S-->>C: SSE Event (data: ok)
+    Note over C: Recibe confirmación -> Actualiza UI

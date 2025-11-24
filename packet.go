@@ -1,6 +1,8 @@
 package crudp
 
 import (
+	"context"
+
 	. "github.com/cdvelop/tinystring"
 )
 
@@ -47,7 +49,7 @@ func (cp *CrudP) DecodeData(packet *Packet, index int, target any) error {
 }
 
 // ProcessPacket automatically processes a packet and calls the corresponding handler
-func (cp *CrudP) ProcessPacket(requestBytes []byte) ([]byte, error) {
+func (cp *CrudP) ProcessPacket(ctx context.Context, requestBytes []byte) ([]byte, error) {
 	var packet Packet
 	if err := cp.DecodePacket(requestBytes, &packet); err != nil {
 		return cp.createErrorResponse("decode_error", err)
@@ -59,7 +61,7 @@ func (cp *CrudP) ProcessPacket(requestBytes []byte) ([]byte, error) {
 		return cp.createErrorResponse("decode_data_error", err)
 	}
 
-	result, err := cp.callHandler(packet.HandlerID, packet.Action, decodedData...)
+	result, err := cp.callHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
 	if err != nil {
 		return cp.createErrorResponse("handler_error", err)
 	}

@@ -1,22 +1,14 @@
 package modules
 
 import (
-	"github.com/cdvelop/crudp"
-	"github.com/cdvelop/crudp/example/modules/patientCare"
-	"github.com/cdvelop/crudp/example/modules/userRegister"
+	"github.com/cdvelop/crudp/example/modules/patient"
+	"github.com/cdvelop/crudp/example/modules/user"
 )
 
-// Shared instance between client and server
-var Protocol = Setup(
-	&userRegister.User{},
-	&patientCare.Patient{},
-)
-
-// Setup initializes CRUDP with the real implementations
-func Setup(handlers ...any) *crudp.CrudP {
-	cp := crudp.New()
-	if err := cp.LoadHandlers(handlers...); err != nil {
-		panic(err)
+// Init returns all business modules
+func Init() []any {
+	return []any{
+		&user.Handler{},
+		&patient.Handler{},
 	}
-	return cp
 }

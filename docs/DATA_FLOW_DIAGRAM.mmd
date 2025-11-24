@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant Client as TinyGo Client
+    participant HTTP as Server HTTP (POST)
+    participant Queue as Job Queue (Channel)
+    participant Worker as Handler Runner
+    participant SSE as Server SSE (GET)
+
+    Note over Client: Usuario realiza 3 acciones offline
+
+    Client->>HTTP: POST /sync (Batch con 3 Packets)
+    Note over HTTP: Extrae UserID/Roles del Request
+    HTTP->>Queue: Encola (Contexto + Batch)
+    HTTP-->>Client: 202 Accepted (HTTP termina aquí)
+
+    loop Worker Processing
+        Queue->>Worker: Toma el Batch
+        Worker->>Worker: Itera sobre Packets
+        Worker->>Worker: Ejecuta Handler.Create/Update...
+        Note right of Worker: Handler recibe Contexto puro (sin w/r)
+    end
+
+    Worker->>SSE: Envía BatchResponse (Resultados)
+    SSE-->>Client: Evento SSE: "batch_processed"
+    
+    Note over Client: Actualiza UI con los ReqIDs recibidos

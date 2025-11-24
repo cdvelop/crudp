@@ -1,4 +1,8 @@
-package userRegister
+package user
+
+import "context"
+
+type Handler struct{}
 
 type User struct {
 	ID    int
@@ -6,7 +10,7 @@ type User struct {
 	Email string
 }
 
-func (u *User) Create(data ...any) (any, error) {
+func (h *Handler) Create(ctx context.Context, data ...any) (any, error) {
 	created := make([]*User, 0, len(data))
 	for _, item := range data {
 		user := item.(*User)
@@ -16,7 +20,7 @@ func (u *User) Create(data ...any) (any, error) {
 	return created, nil
 }
 
-func (u *User) Read(data ...any) (any, error) {
+func (h *Handler) Read(ctx context.Context, data ...any) (any, error) {
 	results := make([]*User, 0, len(data))
 	for _, item := range data {
 		user := item.(*User)

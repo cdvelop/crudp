@@ -1,15 +1,17 @@
 package crudp
 
 import (
+	"context"
+
 	"github.com/cdvelop/tinybin"
 )
 
 // actionHandler groups the CRUD functions for a record index
 type actionHandler struct {
-	Create func(...any) (any, error)
-	Read   func(...any) (any, error)
-	Update func(...any) (any, error)
-	Delete func(...any) (any, error)
+	Create func(context.Context, ...any) (any, error)
+	Read   func(context.Context, ...any) (any, error)
+	Update func(context.Context, ...any) (any, error)
+	Delete func(context.Context, ...any) (any, error)
 
 	// Store original handler for type analysis
 	Handler any

@@ -1,6 +1,7 @@
 package crudp
 
 import (
+	"context"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ type User struct {
 	Email string
 }
 
-func (u *User) Create(data ...any) (any, error) {
+func (u *User) Create(ctx context.Context, data ...any) (any, error) {
 	created := make([]*User, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
@@ -21,7 +22,7 @@ func (u *User) Create(data ...any) (any, error) {
 	return created, nil
 }
 
-func (u *User) Read(data ...any) (any, error) {
+func (u *User) Read(ctx context.Context, data ...any) (any, error) {
 	results := make([]*User, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
@@ -37,7 +38,7 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 		// Removed debug logs for cleaner output
 	}
 	cp := New(log)
-	if err := cp.LoadHandlers(&User{}); err != nil {
+	if err := cp.RegisterHandler(&User{}); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)
 	}
 
@@ -47,7 +48,7 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 		t.Fatalf("Failed to encode create packet: %v", err)
 	}
 
-	response, err := cp.ProcessPacket(createPacket)
+	response, err := cp.ProcessPacket(context.Background(), createPacket)
 	if err != nil {
 		t.Fatalf("Failed to process create packet: %v", err)
 	}
@@ -72,7 +73,7 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 		t.Fatalf("Failed to encode read packet: %v", err)
 	}
 
-	response, err = cp.ProcessPacket(readPacket)
+	response, err = cp.ProcessPacket(context.Background(), readPacket)
 	if err != nil {
 		t.Fatalf("Failed to process read packet: %v", err)
 	}
