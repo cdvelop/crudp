@@ -24,24 +24,31 @@ type CrudP struct {
 	tinyBin  *tinybin.TinyBin // TinyBin instance for encoding/decoding with caching
 
 	log func(msg ...any) // Optional logging function
+
+	apiEndpoint string // HTTP endpoint for binary protocol (default "/api")
 }
 
 // New creates a new CrudP instance
-// Optional argument: logging function func(msg ...any)
-// eg: crudp.New(func(msg ...any) { log.Printf("CrudP: %v", msg) })
+// Optional arguments: logging function func(msg ...any), apiEndpoint string
+// eg: crudp.New(func(msg ...any) { log.Printf("CrudP: %v", msg) }, "/api/v1")
 func New(args ...any) *CrudP {
 
 	var log func(msg ...any) // default no logging
+	var apiEndpoint = "/api" // default endpoint
 
 	// Parse optional arguments
 	for _, arg := range args {
 		if lf, ok := arg.(func(msg ...any)); ok {
 			log = lf
 		}
+		if ep, ok := arg.(string); ok {
+			apiEndpoint = ep
+		}
 	}
 
 	return &CrudP{
-		tinyBin: tinybin.New(), // Initialize TinyBin instance for caching and performance
-		log:     log,
+		tinyBin:     tinybin.New(), // Initialize TinyBin instance for caching and performance
+		log:         log,
+		apiEndpoint: apiEndpoint,
 	}
 }
