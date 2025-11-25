@@ -32,13 +32,6 @@ To achieve clean architecture, the business **Handler** should not know that a p
 
 See [interfaces.go](../interfaces.go) for the complete interface definitions.
 
-## Project Structure
-
-- **Package Structure:** [PACKAGE_STRUCTURE.md](PACKAGE_STRUCTURE.md)
-- **Integration Guide:** [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)
-- **Router Implementation:** [ROUTER_IMPLEMENTATION.md](ROUTER_IMPLEMENTATION.md)
-- **File Upload Handling:** [FILE_UPLOAD.md](FILE_UPLOAD.md)
-- **Data Flow Diagram:** [DATA_FLOW_DIAGRAM.mmd](DATA_FLOW_DIAGRAM.mmd)
 
 ## Protocol Requirements
 

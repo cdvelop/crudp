@@ -43,47 +43,86 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 	}
 
 	// Test Create operation
-	createPacket, err := cp.EncodePacket('c', 0, "", &User{Name: "John", Email: "john@example.com"})
+	userData, err := cp.tinyBin.Encode(&User{Name: "John", Email: "john@example.com"})
 	if err != nil {
-		t.Fatalf("Failed to encode create packet: %v", err)
+		t.Fatalf("Failed to encode user data: %v", err)
 	}
 
-	response, err := cp.ProcessPacket(context.Background(), createPacket)
+	createPacket := Packet{
+		Action:    'c',
+		HandlerID: 0,
+		ReqID:     "test-create",
+		Data:      [][]byte{userData},
+	}
+
+	batchReq := BatchRequest{Packets: []Packet{createPacket}}
+	batchBytes, err := cp.tinyBin.Encode(batchReq)
 	if err != nil {
-		t.Fatalf("Failed to process create packet: %v", err)
+		t.Fatalf("Failed to encode batch request: %v", err)
 	}
 
-	// Decode response
-	var responsePacket Packet
-	if err := cp.DecodePacket(response, &responsePacket); err != nil {
-		t.Fatalf("Failed to decode response packet: %v", err)
+	response, err := cp.ProcessBatch(context.Background(), batchBytes)
+	if err != nil {
+		t.Fatalf("Failed to process batch: %v", err)
 	}
 
-	if responsePacket.Action != 'c' {
-		t.Errorf("Expected action 'c', got '%c'", responsePacket.Action)
+	var batchResp BatchResponse
+	if err := cp.tinyBin.Decode(response, &batchResp); err != nil {
+		t.Fatalf("Failed to decode batch response: %v", err)
 	}
 
-	if responsePacket.Message != "success" {
-		t.Errorf("Expected success message, got '%s'", responsePacket.Message)
+	if len(batchResp.Results) != 1 {
+		t.Fatalf("Expected 1 result, got %d", len(batchResp.Results))
+	}
+
+	result := batchResp.Results[0]
+	if result.ReqID != "test-create" {
+		t.Errorf("Expected ReqID 'test-create', got '%s'", result.ReqID)
+	}
+
+	if !result.Success {
+		t.Errorf("Expected success, got failure: %s", result.Message)
 	}
 
 	// Test Read operation
-	readPacket, err := cp.EncodePacket('r', 0, "", &User{ID: 123})
+	readUserData, err := cp.tinyBin.Encode(&User{ID: 123})
 	if err != nil {
-		t.Fatalf("Failed to encode read packet: %v", err)
+		t.Fatalf("Failed to encode read user data: %v", err)
 	}
 
-	response, err = cp.ProcessPacket(context.Background(), readPacket)
+	readPacket := Packet{
+		Action:    'r',
+		HandlerID: 0,
+		ReqID:     "test-read",
+		Data:      [][]byte{readUserData},
+	}
+
+	batchReq2 := BatchRequest{Packets: []Packet{readPacket}}
+	batchBytes2, err := cp.tinyBin.Encode(batchReq2)
 	if err != nil {
-		t.Fatalf("Failed to process read packet: %v", err)
+		t.Fatalf("Failed to encode batch request 2: %v", err)
 	}
 
-	// Decode response
-	if err := cp.DecodePacket(response, &responsePacket); err != nil {
-		t.Fatalf("Failed to decode response packet: %v", err)
+	response2, err := cp.ProcessBatch(context.Background(), batchBytes2)
+	if err != nil {
+		t.Fatalf("Failed to process read batch: %v", err)
 	}
 
-	if responsePacket.Action != 'r' {
-		t.Errorf("Expected action 'r', got '%c'", responsePacket.Action)
+	var batchResp2 BatchResponse
+	if err := cp.tinyBin.Decode(response2, &batchResp2); err != nil {
+		t.Fatalf("Failed to decode batch response 2: %v", err)
+	}
+
+	if len(batchResp2.Results) != 1 {
+		t.Fatalf("Expected 1 result, got %d", len(batchResp2.Results))
+	}
+
+	result2 := batchResp2.Results[0]
+	if result2.ReqID != "test-read" {
+		t.Errorf("Expected ReqID 'test-read', got '%s'", result2.ReqID)
+	}
+
+	if !result2.Success {
+		t.Errorf("Expected success, got failure: %s", result2.Message)
 	}
 }

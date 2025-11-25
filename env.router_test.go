@@ -61,7 +61,7 @@ func (h *orderedMiddlewareHandler) Middleware(next http.Handler) http.Handler {
 type mockBasicHandler struct{}
 
 func TestBuildRouter_BasicFunctionality(t *testing.T) {
-	cp := New("/api")
+	cp := New()
 	err := cp.RegisterHandler(&mockBasicHandler{})
 	if err != nil {
 		t.Fatalf("Failed to register handler: %v", err)
@@ -74,7 +74,7 @@ func TestBuildRouter_BasicFunctionality(t *testing.T) {
 }
 
 func TestBuildRouter_CustomRoutes(t *testing.T) {
-	cp := New("/api")
+	cp := New()
 	err := cp.RegisterHandler(&mockRouteHandler{})
 	if err != nil {
 		t.Fatalf("Failed to register handler: %v", err)
@@ -97,7 +97,7 @@ func TestBuildRouter_CustomRoutes(t *testing.T) {
 }
 
 func TestBuildRouter_Middleware(t *testing.T) {
-	cp := New("/api")
+	cp := New()
 	err := cp.RegisterHandler(&mockMiddlewareHandler{})
 	if err != nil {
 		t.Fatalf("Failed to register handler: %v", err)
@@ -117,7 +117,7 @@ func TestBuildRouter_Middleware(t *testing.T) {
 }
 
 func TestBuildRouter_MultipleHandlers(t *testing.T) {
-	cp := New("/api")
+	cp := New()
 	err := cp.RegisterHandler(&mockRouteHandler{}, &mockMiddlewareHandler{})
 	if err != nil {
 		t.Fatalf("Failed to register handlers: %v", err)
@@ -149,7 +149,7 @@ func TestBuildRouter_MultipleHandlers(t *testing.T) {
 }
 
 func TestBuildRouter_FullHandler(t *testing.T) {
-	cp := New("/api")
+	cp := New()
 	err := cp.RegisterHandler(&mockFullHandler{})
 	if err != nil {
 		t.Fatalf("Failed to register handler: %v", err)
@@ -186,7 +186,7 @@ func TestBuildRouter_MiddlewareOrder(t *testing.T) {
 		&orderedMiddlewareHandler{order: 2},
 	}
 
-	cp := New("/api")
+	cp := New()
 	err := cp.RegisterHandler(handlers...)
 	if err != nil {
 		t.Fatalf("Failed to register handlers: %v", err)
@@ -228,7 +228,7 @@ func TestBuildRouter_ApiEndpoint(t *testing.T) {
 }
 
 func TestHandleBinaryProtocol_MethodNotAllowed(t *testing.T) {
-	cp := New("/api")
+	cp := New()
 	cp.RegisterHandler(&mockBasicHandler{})
 
 	router := cp.BuildRouter()

@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant CLIENT as CLIENT (WASM)
+    participant SERVER as SERVER
+
+    CLIENT->>SERVER: POST /api (BatchRequest)\n[user initiates action]
+    Note right of SERVER: Extract UserID/Role (UserProvider)\nProcessBatch()\nCheck handler WaitingTime()
+
+    alt WaitingTime = 0 or missing
+        SERVER-->>CLIENT: HTTP 200 (instant)\nBatchResponse
+    else WaitingTime > 0
+        Note right of SERVER: Open temporary SSE stream\nAccumulate responses for BatchWindow ms\nSend accumulated BatchResponse
+        SERVER-->>CLIENT: event: batch\n data: BatchResponse
+        Note right of SERVER: Stream closes after batch
+    else WaitingTime = -1
+        Note right of SERVER: Open permanent SSE stream (kept-alive per handler/user)\nStream remains open for real-time updates
+        SERVER-->>CLIENT: event: update\n data: Payload
+    end

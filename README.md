@@ -1,8 +1,6 @@
 # CRUDP
 
-A simple binary CRUD protocol for Go structs with deterministic, shared handler registration.
----
-CRUDP is a binary CRUD protocol supporting the four basic operations (Create, Read, Update, Delete) that evolves from a simple synchronous system to a batched asynchronous one, using HTTP as a tunnel for binary data and SSE for reactive responses. It supports batch/asynchronous processing and is designed for Local-First / Offline-First apps, enabling offline synchronization, batch processing, and decoupling between client and server while maintaining binary efficiency and TinyGo compatibility.
+ Is a binary CRUD protocol supporting the four basic operations (Create, Read, Update, Delete) that evolves from a simple synchronous system to a batched asynchronous one, using HTTP as a tunnel for binary data and SSE for reactive responses. It supports batch/asynchronous processing and is designed for Local-First / Offline-First apps, enabling offline synchronization, batch processing, and decoupling between client and server while maintaining binary efficiency and TinyGo compatibility.
 
 ## Documentation
 

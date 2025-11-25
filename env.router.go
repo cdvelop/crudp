@@ -48,7 +48,7 @@ func (cp *CrudP) BuildRouter() http.Handler {
 	return handler
 }
 
-// handleBinaryProtocol processes CRUDP binary requests
+// handleBinaryProtocol processes CRUDP binary batch requests
 func (cp *CrudP) handleBinaryProtocol(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -61,7 +61,7 @@ func (cp *CrudP) handleBinaryProtocol(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := cp.ProcessPacket(r.Context(), body)
+	response, err := cp.ProcessBatch(r.Context(), body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
