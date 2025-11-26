@@ -102,7 +102,7 @@ func (cp *CrudP) processSinglePacket(ctx context.Context, packet *Packet) (Packe
 		}, err
 	}
 
-	result, err := cp.callHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
+	responses, err := cp.callHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
 	if err != nil {
 		return PacketResult{
 			ReqID:   packet.ReqID,
@@ -111,17 +111,52 @@ func (cp *CrudP) processSinglePacket(ctx context.Context, packet *Packet) (Packe
 		}, err
 	}
 
+	// Process responses for routing and data
 	var responseData []byte
-	if bytes, ok := result.([]byte); ok {
-		responseData = bytes
-	} else {
-		responseData, err = cp.tinyBin.Encode(result)
-		if err != nil {
-			return PacketResult{
-				ReqID:   packet.ReqID,
-				Success: false,
-				Message: err.Error(),
-			}, err
+	for _, resp := range responses {
+		if response, ok := resp.(Response); ok {
+			data, broadcast, respErr := response.Response()
+			if respErr != nil {
+				return PacketResult{
+					ReqID:   packet.ReqID,
+					Success: false,
+					Message: respErr.Error(),
+				}, respErr
+			}
+			// Handle SSE routing based on broadcast
+			cp.routeToSSE(data, broadcast, packet.HandlerID)
+
+			// Use the first response data for the direct response
+			if responseData == nil {
+				if bytes, ok := data.([]byte); ok {
+					responseData = bytes
+				} else {
+					responseData, err = cp.tinyBin.Encode(data)
+					if err != nil {
+						return PacketResult{
+							ReqID:   packet.ReqID,
+							Success: false,
+							Message: err.Error(),
+						}, err
+					}
+				}
+			}
+		} else {
+			// Fallback for non-Response items
+			if responseData == nil {
+				if bytes, ok := resp.([]byte); ok {
+					responseData = bytes
+				} else {
+					responseData, err = cp.tinyBin.Encode(resp)
+					if err != nil {
+						return PacketResult{
+							ReqID:   packet.ReqID,
+							Success: false,
+							Message: err.Error(),
+						}, err
+					}
+				}
+			}
 		}
 	}
 

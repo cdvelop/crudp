@@ -33,94 +33,13 @@ crudp/
 
 ## Core Interfaces
 
-### 1. WaitingTime Interface (Optional)
+### 1. See [WaitingTime Interface (Optional)](WAITING_TIME_INTERFACE.md) for details.
 
-See [WAITING_TIME_INTERFACE.md](WAITING_TIME_INTERFACE.md) for details.
+### 2. See [UserProvider Interface (Required for SSE)](USER_PROVIDER.md) for details.
 
-### 2. UserProvider Interface (Required for SSE)
+### 3. See [KVStore Interface (Optional for Persistence)](DATABASE_CONFIG.md) for detailed.
 
-**File: `interfaces.go`**
-```go
-// UserProvider extracts user context from requests for SSE routing
-type UserProvider interface {
-    // GetUserID returns unique user identifier from context
-    GetUserID(ctx context.Context) string
-    
-    // GetUserRole returns user role for role-based broadcasting
-    // Examples: "admin", "user", "guest"
-    GetUserRole(ctx context.Context) string
-}
-```
-
-**Example Implementation:**
-```go
-type AuthMiddleware struct{}
-
-func (a *AuthMiddleware) GetUserID(ctx context.Context) string {
-    // Extract from JWT, session, etc.
-    if userID, ok := ctx.Value("userID").(string); ok {
-        return userID
-    }
-    return ""
-}
-
-func (a *AuthMiddleware) GetUserRole(ctx context.Context) string {
-    if role, ok := ctx.Value("role").(string); ok {
-        return role
-    }
-    return "guest"
-}
-```
-
-### 3. KVStore Interface (Optional for Persistence)
-
-See [DATABASE_CONFIG.md](DATABASE_CONFIG.md) for detailed database configuration and KVStore implementations.
-
-### 4. Config Structure
-
-**File: `config.go`**
-```go
-// Config holds CrudP configuration including SSE broker settings
-type Config struct {
-    // HTTP endpoint for binary protocol (default: "/api")
-    APIEndpoint string
-    
-    // Server port (default: 6060 - GO GO)
-    Port string
-    
-    // Batch accumulation window in milliseconds (default: 50ms)
-    // Server waits this long to accumulate responses before sending
-    BatchWindow int
-    
-    // Max retry attempts for failed requests (default: 3)
-    MaxRetries int
-    
-    // Retry interval in milliseconds (default: 1000ms with exponential backoff)
-    RetryInterval int
-    
-    // Logger function for logging messages (optional)
-    Logger func(msg ...any)
-    
-    // Optional persistence layer
-    // See DATABASE_CONFIG.md for implementations
-    Store KVStore
-    
-    // Optional user provider for SSE routing
-    UserProvider UserProvider
-}
-
-// DefaultConfig returns standard configuration
-func DefaultConfig() *Config {
-    return &Config{
-        APIEndpoint:  "/api",
-        Port:         ":6060",
-        BatchWindow:  100,  // 100ms batch accumulation
-        MaxRetries:   3,
-        RetryInterval: 1000, // 1 second base
-        Logger:       nil,   // No logging by default
-    }
-}
-```
+### 4. See [Config Structure](CONFIG.md) for details.
 
 ### 5. Broker Queue Structure (Private)
 
@@ -156,7 +75,7 @@ func (bq *brokerQueue) RequeueFailed(reqIDs []string) error
 
 ### 6. SSE Routing Strategy (Dependency Injection)
 
-See [EVENTS.md](EVENTS.md) for details.
+See [RESPONSE.md](RESPONSE.md) for details.
 
 ---
 
@@ -237,16 +156,15 @@ package main
 
 import (
     "myProject/pkg/router"
-    "github.com/cdvelop/crudp"
 )
 
 func main() {
     cp := router.NewRouter()
     
-    // Blocks forever, starts SSE listeners in background
-      if err := cp.ListenAndServe(); err != nil {
-        panic(err)
-    }
+    // por definir
+ 
+
+    select {} // Keep main alive
 }
 ```
 
@@ -258,54 +176,22 @@ func main() {
 package main
 
 import (
+    "http"
     "myProject/pkg/router"
 )
 
 func main() {
     
-    cp := crudp.New(config)
+    cp := router.NewRouter()
     // Custom config
     cp.SetPort(":8080")
     cp.SetBatchWindow(10) // 10ms batching
     
+    handler := cp.BuildRouter()
+
     // Blocks forever, starts HTTP server
-    if err := cp.ListenAndServe(); err != nil {
+    if err := http.ListenAndServe(":8080", handler); err != nil {
         panic(err)
-    }
+    }   
 }
 ```
-
----
-
-## Implementation Roadmap
-
-### Phase 1: Core Broker (Base)
-- [ ] Define interfaces: `AsyncHandler`, `UserProvider`, `KVStore`
-- [ ] Implement `Config` with defaults
-- [ ] Create `brokerQueue` with retry logic
-- [ ] Update `New()` to accept `Config`
-
-### Phase 2: Synchronous Flow (Baseline)
-- [ ] Refactor `ProcessBatch()` to check `WaitingTime()`
-- [ ] Keep existing HTTP POST response for WaitingTime=0
-- [ ] Test backward compatibility
-
-### Phase 3: SSE Server Implementation
-- [ ] Create `sse.broker.server.go` with SSE endpoint
-- [ ] Implement global batch accumulator (Ticker)
-- [ ] Implement multiplexed SSE connection manager (1 per user)
-- [ ] Implement dependency injection for routing (Notifier interface)
-
-### Phase 4: SSE Client Implementation  
-- [ ] Create `sse.broker.client.go` with EventSource
-- [ ] Implement client-side queue with retry
-- [ ] Handle SSE reconnection logic
-- [ ] Add localStorage persistence (optional) - see [DATABASE_CONFIG.md](DATABASE_CONFIG.md)
-
-### Phase 5: Routing & Broadcasting
-- [ ] Implement `RouteTarget` logic in broker
-- [ ] Add user-based filtering
-- [ ] Add role-based broadcasting
-- [ ] Add global broadcast
-
----

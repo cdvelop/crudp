@@ -18,8 +18,15 @@ type AsyncHandler interface {
 // Synchronous handler (no WaitingTime needed)
 type UserHandler struct{}
 
-func (h *UserHandler) Create(ctx context.Context, data ...any) (any, error) {
-    return "created", nil
+func (h *UserHandler) Create(ctx context.Context, data ...any) []any {
+    var responses []any
+    
+    for _, item := range data {
+        // Process item
+        responses = append(responses, "created")
+    }
+    
+    return responses
 }
 
 // Async batch handler (accumulates responses for 2 seconds)

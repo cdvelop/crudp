@@ -8,10 +8,10 @@ import (
 
 // actionHandler groups the CRUD functions for a record index
 type actionHandler struct {
-	Create func(context.Context, ...any) (any, error)
-	Read   func(context.Context, ...any) (any, error)
-	Update func(context.Context, ...any) (any, error)
-	Delete func(context.Context, ...any) (any, error)
+	Create func(context.Context, ...any) []any
+	Read   func(context.Context, ...any) []any
+	Update func(context.Context, ...any) []any
+	Delete func(context.Context, ...any) []any
 
 	// Store original handler for type analysis
 	Handler any
@@ -50,5 +50,14 @@ func New(args ...any) *CrudP {
 		tinyBin:     tinybin.New(), // Initialize TinyBin instance for caching and performance
 		log:         log,
 		apiEndpoint: apiEndpoint,
+	}
+}
+
+// routeToSSE handles Server-Sent Events routing based on broadcast targets
+func (cp *CrudP) routeToSSE(data any, broadcast []string, handlerID uint8) {
+	// TODO: Implement SSE broker routing
+	// For now, just log the routing information
+	if cp.log != nil {
+		cp.log("SSE Route: handlerID=%d, broadcast=%v, data=%v", handlerID, broadcast, data)
 	}
 }

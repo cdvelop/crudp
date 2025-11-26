@@ -43,7 +43,7 @@ func (cp *CrudP) bind(index uint8, handler any) {
 }
 
 // callHandler searches and calls the handler directly by shared index
-func (cp *CrudP) callHandler(ctx context.Context, handlerID uint8, action byte, data ...any) (any, error) {
+func (cp *CrudP) callHandler(ctx context.Context, handlerID uint8, action byte, data ...any) ([]any, error) {
 	if int(handlerID) >= len(cp.handlers) {
 		return nil, Errf("no handler found for id: %d", handlerID)
 	}
@@ -53,19 +53,19 @@ func (cp *CrudP) callHandler(ctx context.Context, handlerID uint8, action byte, 
 	switch action {
 	case 'c':
 		if handler.Create != nil {
-			return handler.Create(ctx, data...)
+			return handler.Create(ctx, data...), nil
 		}
 	case 'r':
 		if handler.Read != nil {
-			return handler.Read(ctx, data...)
+			return handler.Read(ctx, data...), nil
 		}
 	case 'u':
 		if handler.Update != nil {
-			return handler.Update(ctx, data...)
+			return handler.Update(ctx, data...), nil
 		}
 	case 'd':
 		if handler.Delete != nil {
-			return handler.Delete(ctx, data...)
+			return handler.Delete(ctx, data...), nil
 		}
 	}
 

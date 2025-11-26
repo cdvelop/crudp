@@ -9,7 +9,6 @@
 1. **Optional HTTP Routes:** Add custom endpoints (e.g., `/upload`, `/export`) via `HttpRouteProvider`
 2. **Global Middleware:** Provide middleware that applies to ALL routes via `MiddlewareProvider`
 3. **Centralized Security:** All routes are automatically wrapped with registered middleware
-4. **Binary Protocol Default:** Most handlers only need CRUD interfaces (see [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md))
 
 ---
 

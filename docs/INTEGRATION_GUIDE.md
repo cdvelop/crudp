@@ -36,14 +36,28 @@ import "context"
 type Handler struct{}
 
 // Implement CRUDP interfaces (Creator, Reader, Updater, Deleter)
-func (h *Handler) Create(ctx context.Context, data ...any) (any, error) {
-    // Business logic
-    return "created", nil
+func (h *Handler) Create(ctx context.Context, data ...any) []any {
+    var responses []any
+    
+    for _, item := range data {
+        // Business logic for each item
+        // ... process item ...
+        responses = append(responses, "created")
+    }
+    
+    return responses
 }
 
-func (h *Handler) Read(ctx context.Context, data ...any) (any, error) {
-    // Business logic
-    return "user data", nil
+func (h *Handler) Read(ctx context.Context, data ...any) []any {
+    var responses []any
+    
+    for _, item := range data {
+        // Business logic for each item
+        // ... process item ...
+        responses = append(responses, "user data")
+    }
+    
+    return responses
 }
 ```
 

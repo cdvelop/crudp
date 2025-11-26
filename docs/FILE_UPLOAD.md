@@ -43,27 +43,55 @@ type FileReference struct {
 type Handler struct{}
 
 // Implement CRUDP binary protocol interfaces for file metadata management
-func (h *Handler) Create(ctx context.Context, data ...any) (any, error) {
-    ref := data[0].(FileReference)
-    // Business logic: save file reference to database
-    return h.db.SaveFileReference(ref)
+func (h *Handler) Create(ctx context.Context, data ...any) []any {
+    var responses []any
+    
+    for _, item := range data {
+        ref := item.(FileReference)
+        // Business logic: save file reference to database
+        result := h.db.SaveFileReference(ref)
+        responses = append(responses, result)
+    }
+    
+    return responses
 }
 
-func (h *Handler) Read(ctx context.Context, data ...any) (any, error) {
-    // Query file references from database
-    return h.db.GetFileReferences()
+func (h *Handler) Read(ctx context.Context, data ...any) []any {
+    var responses []any
+    
+    for _, item := range data {
+        // Query file references from database
+        result := h.db.GetFileReferences()
+        responses = append(responses, result)
+    }
+    
+    return responses
 }
 
-func (h *Handler) Update(ctx context.Context, data ...any) (any, error) {
-    // Update file metadata (rename, move, etc.)
-    ref := data[0].(FileReference)
-    return h.db.UpdateFileReference(ref)
+func (h *Handler) Update(ctx context.Context, data ...any) []any {
+    var responses []any
+    
+    for _, item := range data {
+        // Update file metadata (rename, move, etc.)
+        ref := item.(FileReference)
+        result := h.db.UpdateFileReference(ref)
+        responses = append(responses, result)
+    }
+    
+    return responses
 }
 
-func (h *Handler) Delete(ctx context.Context, data ...any) (any, error) {
-    // Mark file for deletion or move to trash
-    fileID := data[0].(string)
-    return h.db.DeleteFileReference(fileID)
+func (h *Handler) Delete(ctx context.Context, data ...any) []any {
+    var responses []any
+    
+    for _, item := range data {
+        // Mark file for deletion or move to trash
+        fileID := item.(string)
+        result := h.db.DeleteFileReference(fileID)
+        responses = append(responses, result)
+    }
+    
+    return responses
 }
 ```
 

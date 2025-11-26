@@ -13,14 +13,14 @@ type BenchUser struct {
 	Age   uint8
 }
 
-func (u *BenchUser) Create(data ...any) (any, error) {
+func (u *BenchUser) Create(data ...any) []any {
 	created := make([]*BenchUser, 0, len(data))
 	for _, item := range data {
 		user := item.(*BenchUser)
 		user.ID = 123
 		created = append(created, user)
 	}
-	return created, nil
+	return []any{created}
 }
 
 func (u *BenchUser) Read(data ...any) (any, error) {

@@ -11,7 +11,7 @@ type User struct {
 	Email string
 }
 
-func (u *User) Create(ctx context.Context, data ...any) (any, error) {
+func (u *User) Create(ctx context.Context, data ...any) []any {
 	created := make([]*User, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
@@ -19,17 +19,17 @@ func (u *User) Create(ctx context.Context, data ...any) (any, error) {
 		user.ID = 123
 		created = append(created, user)
 	}
-	return created, nil
+	return []any{created}
 }
 
-func (u *User) Read(ctx context.Context, data ...any) (any, error) {
+func (u *User) Read(ctx context.Context, data ...any) []any {
 	results := make([]*User, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
 		user := item.(*User)
 		results = append(results, &User{ID: user.ID, Name: "Found " + user.Name, Email: user.Email})
 	}
-	return results, nil
+	return []any{results}
 }
 
 func TestCrudP_BasicFunctionality(t *testing.T) {
