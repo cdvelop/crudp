@@ -51,7 +51,7 @@ Complete each step **completely** (code + tests) before moving to the next.
 | 1 | [STEP_01_PACKET_STRUCTURE.md](./STEP_01_PACKET_STRUCTURE.md) | Update PacketResult with MessageType and Data [][]byte - completed |
 | 2 | [STEP_02_HANDLER_REGISTRATION.md](./STEP_02_HANDLER_REGISTRATION.md) | Handler name via reflection, Validator, return `any` - completed |
 | 3 | [STEP_03_CONFIG_SYSTEM.md](./STEP_03_CONFIG_SYSTEM.md) | Config system with Codec interface (Logger only by method) - completed |
-| 4 | [STEP_04_BROKER_BATCHING.md](./STEP_04_BROKER_BATCHING.md) | Broker with consolidation and tinytime Timer - to do |
+| 4 | [STEP_04_BROKER_BATCHING.md](./STEP_04_BROKER_BATCHING.md) | Broker with consolidation and tinytime Timer - completed |
 | 5 | [STEP_05_UPDATE_EXISTING.md](./STEP_05_UPDATE_EXISTING.md) | Update existing code and tests - to do |
 
 ---

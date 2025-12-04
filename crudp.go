@@ -22,6 +22,7 @@ type CrudP struct {
 	handlers []actionHandler
 	codec    Codec
 	log      func(...any) // Never nil - uses no-op by default
+	broker   *broker      // Add this field
 }
 
 // noopLogger is the default logger that does nothing
@@ -33,17 +34,21 @@ func New(cfg *Config) *CrudP {
 		cfg = DefaultConfig()
 	}
 
-	// Assign default codec if not provided
 	codec := cfg.Codec
 	if codec == nil {
 		codec = getDefaultCodec()
 	}
 
-	return &CrudP{
+	cp := &CrudP{
 		config: cfg,
 		codec:  codec,
-		log:    noopLogger, // Logger disabled by default
+		log:    noopLogger,
 	}
+
+	// Initialize broker
+	cp.broker = newBroker(cfg, codec)
+
+	return cp
 }
 
 // NewDefault creates CrudP with default configuration
@@ -81,4 +86,19 @@ func (cp *CrudP) SetCodec(codec Codec) {
 	if codec != nil {
 		cp.codec = codec
 	}
+}
+
+// Broker returns the broker for advanced configuration
+func (cp *CrudP) Broker() *broker {
+	return cp.broker
+}
+
+// EnqueuePacket queues a packet for batch sending
+func (cp *CrudP) EnqueuePacket(handlerID uint8, action byte, reqID string, data any) error {
+	encoded, err := cp.codec.Encode(data)
+	if err != nil {
+		return err
+	}
+	cp.broker.Enqueue(handlerID, action, reqID, encoded)
+	return nil
 }
