@@ -1,11 +1,30 @@
 package crudp_test
 
 import (
+	"bytes"
+	"context"
+	"log"
+	"strings"
 	"testing"
 
 	"github.com/cdvelop/crudp"
 	. "github.com/cdvelop/tinystring"
 )
+
+// Test handler that returns a response with broadcast targets
+type sseHandler struct{}
+
+type sseResponse struct {
+	Message string `json:"message"`
+}
+
+func (r sseResponse) Response() (data any, broadcast []string, err error) {
+	return r, []string{"channel1", "channel2"}, nil
+}
+
+func (h *sseHandler) Create(ctx context.Context, data ...any) any {
+	return sseResponse{Message: "broadcast"}
+}
 
 func PacketResultMessageTypeShared(t *testing.T) {
 	t.Run("MessageType Success", func(t *testing.T) {
@@ -88,5 +107,45 @@ func ActionConversionShared(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func SSERoutingShared(t *testing.T, cp *crudp.CrudP) {
+	// Capture log output
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	cp.SetLogger(log.Println)
+
+	// Register handler
+	cp.RegisterHandler(&sseHandler{})
+
+	// Create packet
+	createPacket := crudp.Packet{
+		Action:    'c',
+		HandlerID: 0,
+		ReqID:     "test-sse",
+	}
+
+	// Process packet
+	batchReq := crudp.BatchRequest{Packets: []crudp.Packet{createPacket}}
+	batchBytes, err := cp.Codec().Encode(batchReq)
+	if err != nil {
+		t.Fatalf("Failed to encode batch request: %v", err)
+	}
+	_, err = cp.ProcessBatch(context.Background(), batchBytes)
+	if err != nil {
+		t.Fatalf("Failed to process batch: %v", err)
+	}
+
+	// Verify log output
+	logOutput := buf.String()
+	if !strings.Contains(logOutput, "Broadcasting to channel: channel1") {
+		t.Error("Expected log output to contain 'Broadcasting to channel: channel1'")
+	}
+	if !strings.Contains(logOutput, "Broadcasting to channel: channel2") {
+		t.Error("Expected log output to contain 'Broadcasting to channel: channel2'")
+	}
+	if !strings.Contains(logOutput, `data: {"message":"broadcast"}`) {
+		t.Error("Expected log output to contain 'data: {\"message\":\"broadcast\"}'")
 	}
 }

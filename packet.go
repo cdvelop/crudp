@@ -132,10 +132,16 @@ func (cp *CrudP) encodeResultToPacket(pr *PacketResult, result any) error {
 	if responses, ok := result.([]Response); ok {
 		pr.Data = make([][]byte, 0, len(responses))
 		for _, resp := range responses {
-			data, _, err := resp.Response()
+			data, broadcast, err := resp.Response()
 			if err != nil {
 				return err
 			}
+
+			// SSE routing if broadcast targets exist
+			if len(broadcast) > 0 {
+				cp.routeToSSE(data, broadcast, pr.HandlerID)
+			}
+
 			encoded, err := cp.codec.Encode(data)
 			if err != nil {
 				return err
@@ -147,10 +153,15 @@ func (cp *CrudP) encodeResultToPacket(pr *PacketResult, result any) error {
 
 	// Case 2: Individual Response
 	if resp, ok := result.(Response); ok {
-		data, _, err := resp.Response()
+		data, broadcast, err := resp.Response()
 		if err != nil {
 			return err
 		}
+
+		if len(broadcast) > 0 {
+			cp.routeToSSE(data, broadcast, pr.HandlerID)
+		}
+
 		encoded, err := cp.codec.Encode(data)
 		if err != nil {
 			return err
