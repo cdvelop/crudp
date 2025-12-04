@@ -124,7 +124,7 @@ func TestPacketResult(t *testing.T) {
 ### 5. Response Interface for Multiple Responses
 ```go
 // Handlers return `any` which can be:
-// - A simple value for direct response
+- A simple value for direct response
 // - []Response for multiple broadcast
 // - Individual Response for SSE routing
 
