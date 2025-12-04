@@ -3,6 +3,8 @@ package crudp
 import (
 	"context"
 	"testing"
+
+	. "github.com/cdvelop/tinystring"
 )
 
 type User struct {
@@ -11,7 +13,7 @@ type User struct {
 	Email string
 }
 
-func (u *User) Create(ctx context.Context, data ...any) []any {
+func (u *User) Create(ctx context.Context, data ...any) any {
 	created := make([]*User, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
@@ -19,17 +21,17 @@ func (u *User) Create(ctx context.Context, data ...any) []any {
 		user.ID = 123
 		created = append(created, user)
 	}
-	return []any{created}
+	return created
 }
 
-func (u *User) Read(ctx context.Context, data ...any) []any {
+func (u *User) Read(ctx context.Context, data ...any) any {
 	results := make([]*User, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
 		user := item.(*User)
 		results = append(results, &User{ID: user.ID, Name: "Found " + user.Name, Email: user.Email})
 	}
-	return []any{results}
+	return results
 }
 
 func TestCrudP_BasicFunctionality(t *testing.T) {
@@ -80,12 +82,23 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 		t.Errorf("Expected ReqID 'test-create', got '%s'", result.ReqID)
 	}
 
-	if !result.Success {
+	if result.MessageType != uint8(Msg.Success) {
 		t.Errorf("Expected success, got failure: %s", result.Message)
 	}
 
+	var createdUser []*User
+	if err := cp.tinyBin.Decode(result.Data[0], &createdUser); err != nil {
+		t.Fatalf("Failed to decode created user: %v", err)
+	}
+	if len(createdUser) != 1 {
+		t.Fatalf("Expected 1 created user, got %d", len(createdUser))
+	}
+	if createdUser[0].ID != 123 {
+		t.Errorf("Expected created user ID 123, got %d", createdUser[0].ID)
+	}
+
 	// Test Read operation
-	readUserData, err := cp.tinyBin.Encode(&User{ID: 123})
+	readUserData, err := cp.tinyBin.Encode(&User{ID: 123, Name: "John"})
 	if err != nil {
 		t.Fatalf("Failed to encode read user data: %v", err)
 	}
@@ -122,7 +135,18 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 		t.Errorf("Expected ReqID 'test-read', got '%s'", result2.ReqID)
 	}
 
-	if !result2.Success {
+	if result2.MessageType != uint8(Msg.Success) {
 		t.Errorf("Expected success, got failure: %s", result2.Message)
+	}
+
+	var readUser []*User
+	if err := cp.tinyBin.Decode(result2.Data[0], &readUser); err != nil {
+		t.Fatalf("Failed to decode read user: %v", err)
+	}
+	if len(readUser) != 1 {
+		t.Fatalf("Expected 1 read user, got %d", len(readUser))
+	}
+	if readUser[0].Name != "Found John" {
+		t.Errorf("Expected read user name 'Found John', got '%s'", readUser[0].Name)
 	}
 }

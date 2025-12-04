@@ -25,10 +25,9 @@ type BatchResponse struct {
 }
 
 type PacketResult struct {
-	ReqID   string // correlation with the original request
-	Success bool   // true/false
-	Message string // error or success message
-	Data    []byte // encoded result (if applicable)
+	Packet              // Embed Packet complete for symmetry with BatchRequest
+	MessageType uint8   // tinystring.MessageType (0=Normal, 1=Info, 2=Error, 3=Warning, 4=Success)
+	Message     string  // Message for the user
 }
 
 // EncodePacket encodes a packet for a known handler using this CrudP's TinyBin instance
@@ -90,96 +89,93 @@ func (cp *CrudP) ProcessBatch(ctx context.Context, requestBytes []byte) ([]byte,
 	return cp.tinyBin.Encode(batchResp)
 }
 
-// processSinglePacket processes a single packet and returns a PacketResult
 func (cp *CrudP) processSinglePacket(ctx context.Context, packet *Packet) (PacketResult, error) {
-	// Decode packet data to concrete types using the handler's type information
+	pr := PacketResult{
+		Packet: *packet, // Embed original packet (includes Data [][]byte)
+	}
+
+	// Decode data with known types
 	decodedData, err := cp.decodeWithKnownType(packet, packet.HandlerID)
 	if err != nil {
-		return PacketResult{
-			ReqID:   packet.ReqID,
-			Success: false,
-			Message: err.Error(),
-		}, err
+		pr.MessageType = uint8(Msg.Error)
+		pr.Message = err.Error()
+		return pr, err
 	}
 
-	responses, err := cp.callHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
+	// Call handler
+	result, err := cp.callHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
 	if err != nil {
-		return PacketResult{
-			ReqID:   packet.ReqID,
-			Success: false,
-			Message: err.Error(),
-		}, err
+		pr.MessageType = uint8(Msg.Error)
+		pr.Message = err.Error()
+		return pr, err
 	}
 
-	// Process responses for routing and data
-	var responseData []byte
-	for _, resp := range responses {
-		if response, ok := resp.(Response); ok {
-			data, broadcast, respErr := response.Response()
-			if respErr != nil {
-				return PacketResult{
-					ReqID:   packet.ReqID,
-					Success: false,
-					Message: respErr.Error(),
-				}, respErr
-			}
-			// Handle SSE routing based on broadcast
-			cp.routeToSSE(data, broadcast, packet.HandlerID)
-
-			// Use the first response data for the direct response
-			if responseData == nil {
-				if bytes, ok := data.([]byte); ok {
-					responseData = bytes
-				} else {
-					responseData, err = cp.tinyBin.Encode(data)
-					if err != nil {
-						return PacketResult{
-							ReqID:   packet.ReqID,
-							Success: false,
-							Message: err.Error(),
-						}, err
-					}
-				}
-			}
-		} else {
-			// Fallback for non-Response items
-			if responseData == nil {
-				if bytes, ok := resp.([]byte); ok {
-					responseData = bytes
-				} else {
-					responseData, err = cp.tinyBin.Encode(resp)
-					if err != nil {
-						return PacketResult{
-							ReqID:   packet.ReqID,
-							Success: false,
-							Message: err.Error(),
-						}, err
-					}
-				}
-			}
-		}
+	// Process result - can be multiple Response
+	if err := cp.encodeResultToPacket(&pr, result); err != nil {
+		pr.MessageType = uint8(Msg.Error)
+		pr.Message = err.Error()
+		return pr, err
 	}
 
-	return PacketResult{
-		ReqID:   packet.ReqID,
-		Success: true,
-		Message: "success",
-		Data:    responseData,
-	}, nil
+	pr.MessageType = uint8(Msg.Success)
+	pr.Message = "OK"
+	return pr, nil
 }
 
-// createErrorBatchResponse creates a batch response with a single error result
-func (cp *CrudP) createErrorBatchResponse(message string, err error) ([]byte, error) {
-	batchResp := BatchResponse{
-		Results: []PacketResult{
-			{
-				ReqID:   "",
-				Success: false,
-				Message: Fmt(":%s: %v", message, err),
-			},
-		},
+// encodeResultToPacket encodes handler result to Data [][]byte
+func (cp *CrudP) encodeResultToPacket(pr *PacketResult, result any) error {
+	if result == nil {
+		return nil
 	}
-	return cp.tinyBin.Encode(batchResp)
+
+	// Case 1: Slice of Response for multiple broadcast
+	if responses, ok := result.([]Response); ok {
+		pr.Data = make([][]byte, 0, len(responses))
+		for _, resp := range responses {
+			data, _, err := resp.Response()
+			if err != nil {
+				return err
+			}
+			encoded, err := cp.tinyBin.Encode(data)
+			if err != nil {
+				return err
+			}
+			pr.Data = append(pr.Data, encoded)
+		}
+		return nil
+	}
+
+	// Case 2: Individual Response
+	if resp, ok := result.(Response); ok {
+		data, _, err := resp.Response()
+		if err != nil {
+			return err
+		}
+		encoded, err := cp.tinyBin.Encode(data)
+		if err != nil {
+			return err
+		}
+		pr.Data = [][]byte{encoded}
+		return nil
+	}
+
+	// Case 3: Direct value
+	encoded, err := cp.tinyBin.Encode(result)
+	if err != nil {
+		return err
+	}
+	pr.Data = [][]byte{encoded}
+	return nil
+}
+
+func (cp *CrudP) createErrorBatchResponse(reqID string, err error) ([]byte, error) {
+	result := PacketResult{
+		Packet:      Packet{ReqID: reqID},
+		MessageType: uint8(Msg.Error),
+		Message:     err.Error(),
+	}
+
+	return cp.tinyBin.Encode(BatchResponse{Results: []PacketResult{result}})
 }
 
 // ProcessPacket processes a single packet (for backward compatibility)
@@ -216,7 +212,7 @@ func (cp *CrudP) ProcessPacket(ctx context.Context, requestBytes []byte) ([]byte
 		Action:    packet.Action,
 		HandlerID: packet.HandlerID,
 		ReqID:     result.ReqID,
-		Data:      [][]byte{result.Data},
+		Data:      result.Data,
 	}
 
 	return cp.tinyBin.Encode(responsePacket)
