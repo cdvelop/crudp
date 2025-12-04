@@ -8,13 +8,13 @@ import (
 
 // actionHandler groups the CRUD functions for a record index
 type actionHandler struct {
-	Create func(context.Context, ...any) any
-	Read   func(context.Context, ...any) any
-	Update func(context.Context, ...any) any
-	Delete func(context.Context, ...any) any
-
-	// Store original handler for type analysis
-	Handler any
+	name    string // Handler name (snake_case)
+	index   uint8  // Position in handlers slice
+	handler any    // Original handler for type analysis
+	Create  func(context.Context, ...any) any
+	Read    func(context.Context, ...any) any
+	Update  func(context.Context, ...any) any
+	Delete  func(context.Context, ...any) any
 }
 
 // CrudP handles automatic processing of handlers

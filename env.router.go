@@ -27,14 +27,14 @@ func (cp *CrudP) BuildRouter() http.Handler {
 	// 2. Collect all global middleware from handlers
 	var globalMiddleware []func(http.Handler) http.Handler
 	for _, h := range cp.handlers {
-		if mwProvider, ok := h.Handler.(MiddlewareProvider); ok {
+		if mwProvider, ok := h.handler.(MiddlewareProvider); ok {
 			globalMiddleware = append(globalMiddleware, mwProvider.Middleware)
 		}
 	}
 
 	// 3. Let handlers register their custom HTTP routes
 	for _, h := range cp.handlers {
-		if routeProvider, ok := h.Handler.(HttpRouteProvider); ok {
+		if routeProvider, ok := h.handler.(HttpRouteProvider); ok {
 			routeProvider.RegisterRoutes(mux)
 		}
 	}

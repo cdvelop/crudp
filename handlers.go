@@ -7,23 +7,61 @@ import (
 	. "github.com/cdvelop/tinystring"
 )
 
+// getHandlerName gets the handler name
+// Priority: 1) HandlerName() if implemented, 2) reflection + snake_case
+func getHandlerName(handler any) string {
+	// First try NamedHandler interface
+	if named, ok := handler.(NamedHandler); ok {
+		return named.HandlerName()
+	}
+
+	// Fallback: use reflection and convert to snake_case
+	t := reflect.TypeOf(handler)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+
+	// Use tinystring.SnakeLow for conversion
+	// UserHandler -> user_handler
+	// APIController -> api_controller
+	return Convert(t.Name()).SnakeLow().String()
+}
+
 // RegisterHandler prepares the shared handler table between client and server
 // Receives the real implementations that act as prototypes and handlers.
 func (cp *CrudP) RegisterHandler(handlers ...any) error {
 	cp.handlers = make([]actionHandler, len(handlers))
 
-	for index, handler := range handlers {
-		if handler == nil {
-			return Errf("handler %d is nil", index)
+	for i, h := range handlers {
+		if h == nil {
+			return Errf("handler %d is nil", i)
 		}
 
-		// Store original handler for type analysis
-		cp.handlers[index].Handler = handler
+		// Get name (via interface or reflection)
+		name := getHandlerName(h)
 
-		cp.bind(uint8(index), handler)
+		cp.handlers[i] = actionHandler{
+			name:    name,
+			index:   uint8(i),
+			handler: h,
+		}
+
+		cp.bind(uint8(i), h)
+
+		if cp.log != nil {
+			cp.log("registered handler:", name, "at index", i)
+		}
 	}
 
 	return nil
+}
+
+// GetHandlerName returns the handler name by its ID
+func (cp *CrudP) GetHandlerName(handlerID uint8) string {
+	if int(handlerID) >= len(cp.handlers) {
+		return ""
+	}
+	return cp.handlers[handlerID].name
 }
 
 // bind copies the CRUD functions without dynamic allocations
@@ -42,13 +80,27 @@ func (cp *CrudP) bind(index uint8, handler any) {
 	}
 }
 
-// callHandler searches and calls the handler directly by shared index
-func (cp *CrudP) callHandler(ctx context.Context, handlerID uint8, action byte, data ...any) (any, error) {
+// CallHandler searches and calls the handler directly by shared index
+func (cp *CrudP) CallHandler(ctx context.Context, handlerID uint8, action byte, data ...any) (any, error) {
 	if int(handlerID) >= len(cp.handlers) {
 		return nil, Errf("no handler found for id: %d", handlerID)
 	}
 
 	handler := cp.handlers[handlerID]
+
+	// Optional validation before executing
+	if validator, ok := handler.handler.(Validator); ok {
+		if err := validator.Validate(action, data...); err != nil {
+			return nil, err
+		}
+	}
+
+	// Check context canceled
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+	}
 
 	switch action {
 	case 'c':
@@ -69,7 +121,7 @@ func (cp *CrudP) callHandler(ctx context.Context, handlerID uint8, action byte, 
 		}
 	}
 
-	return nil, Errf("action '%c' not implemented for handler id: %d", action, handlerID)
+	return nil, Errf("action '%c' not implemented for handler: %s", action, handler.name)
 }
 
 // decodeWithKnownType decodes packet data using cached type information when available
@@ -81,7 +133,7 @@ func (cp *CrudP) decodeWithKnownType(packet *Packet, handlerID uint8) ([]any, er
 		return nil, Errf("no handler found for id: %d", handlerID)
 	}
 
-	handler := cp.handlers[handlerID].Handler
+	handler := cp.handlers[handlerID].handler
 	if handler == nil {
 		if cp.log != nil {
 			cp.log("decodeWithKnownType: handler is nil, fallback to raw bytes")
