@@ -1,7 +1,6 @@
 package crudp_test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/cdvelop/crudp"
@@ -114,7 +113,7 @@ func LoggerConfigShared(t *testing.T) {
 
 type testLogHandler struct{}
 
-func (h *testLogHandler) Create(ctx context.Context, data ...any) any {
+func (h *testLogHandler) Create(ctx any, data ...any) any {
 	return "ok"
 }
 

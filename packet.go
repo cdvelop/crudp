@@ -25,9 +25,9 @@ type BatchResponse struct {
 }
 
 type PacketResult struct {
-	Packet              // Embed Packet complete for symmetry with BatchRequest
-	MessageType uint8   // tinystring.MessageType (0=Normal, 1=Info, 2=Error, 3=Warning, 4=Success)
-	Message     string  // Message for the user
+	Packet             // Embed Packet complete for symmetry with BatchRequest
+	MessageType uint8  // tinystring.MessageType (0=Normal, 1=Info, 2=Error, 3=Warning, 4=Success)
+	Message     string // Message for the user
 }
 
 // EncodePacket encodes a packet for a known handler using this CrudP's codec instance
@@ -207,6 +207,10 @@ func (cp *CrudP) ProcessPacket(ctx context.Context, requestBytes []byte) ([]byte
 	}
 
 	result := batchResp.Results[0]
+
+	if result.MessageType == uint8(Msg.Error) {
+		return nil, Err(result.Message)
+	}
 
 	responsePacket := Packet{
 		Action:    packet.Action,
