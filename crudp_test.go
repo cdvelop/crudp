@@ -1,9 +1,10 @@
-package crudp
+package crudp_test
 
 import (
 	"context"
 	"testing"
 
+	"github.com/cdvelop/crudp"
 	. "github.com/cdvelop/tinystring"
 )
 
@@ -36,29 +37,26 @@ func (u *User) Read(ctx context.Context, data ...any) any {
 
 func TestCrudP_BasicFunctionality(t *testing.T) {
 	// Initialize CRUDP with handlers
-	log := func(msg ...any) {
-		// Removed debug logs for cleaner output
-	}
-	cp := New(log)
+	cp := crudp.NewDefault()
 	if err := cp.RegisterHandler(&User{}); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)
 	}
 
 	// Test Create operation
-	userData, err := cp.tinyBin.Encode(&User{Name: "John", Email: "john@example.com"})
+	userData, err := cp.Codec().Encode(&User{Name: "John", Email: "john@example.com"})
 	if err != nil {
 		t.Fatalf("Failed to encode user data: %v", err)
 	}
 
-	createPacket := Packet{
+	createPacket := crudp.Packet{
 		Action:    'c',
 		HandlerID: 0,
 		ReqID:     "test-create",
 		Data:      [][]byte{userData},
 	}
 
-	batchReq := BatchRequest{Packets: []Packet{createPacket}}
-	batchBytes, err := cp.tinyBin.Encode(batchReq)
+	batchReq := crudp.BatchRequest{Packets: []crudp.Packet{createPacket}}
+	batchBytes, err := cp.Codec().Encode(batchReq)
 	if err != nil {
 		t.Fatalf("Failed to encode batch request: %v", err)
 	}
@@ -68,8 +66,8 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 		t.Fatalf("Failed to process batch: %v", err)
 	}
 
-	var batchResp BatchResponse
-	if err := cp.tinyBin.Decode(response, &batchResp); err != nil {
+	var batchResp crudp.BatchResponse
+	if err := cp.Codec().Decode(response, &batchResp); err != nil {
 		t.Fatalf("Failed to decode batch response: %v", err)
 	}
 
@@ -87,7 +85,7 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 	}
 
 	var createdUser []*User
-	if err := cp.tinyBin.Decode(result.Data[0], &createdUser); err != nil {
+	if err := cp.Codec().Decode(result.Data[0], &createdUser); err != nil {
 		t.Fatalf("Failed to decode created user: %v", err)
 	}
 	if len(createdUser) != 1 {
@@ -98,20 +96,20 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 	}
 
 	// Test Read operation
-	readUserData, err := cp.tinyBin.Encode(&User{ID: 123, Name: "John"})
+	readUserData, err := cp.Codec().Encode(&User{ID: 123, Name: "John"})
 	if err != nil {
 		t.Fatalf("Failed to encode read user data: %v", err)
 	}
 
-	readPacket := Packet{
+	readPacket := crudp.Packet{
 		Action:    'r',
 		HandlerID: 0,
 		ReqID:     "test-read",
 		Data:      [][]byte{readUserData},
 	}
 
-	batchReq2 := BatchRequest{Packets: []Packet{readPacket}}
-	batchBytes2, err := cp.tinyBin.Encode(batchReq2)
+	batchReq2 := crudp.BatchRequest{Packets: []crudp.Packet{readPacket}}
+	batchBytes2, err := cp.Codec().Encode(batchReq2)
 	if err != nil {
 		t.Fatalf("Failed to encode batch request 2: %v", err)
 	}
@@ -121,8 +119,8 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 		t.Fatalf("Failed to process read batch: %v", err)
 	}
 
-	var batchResp2 BatchResponse
-	if err := cp.tinyBin.Decode(response2, &batchResp2); err != nil {
+	var batchResp2 crudp.BatchResponse
+	if err := cp.Codec().Decode(response2, &batchResp2); err != nil {
 		t.Fatalf("Failed to decode batch response 2: %v", err)
 	}
 
@@ -140,7 +138,7 @@ func TestCrudP_BasicFunctionality(t *testing.T) {
 	}
 
 	var readUser []*User
-	if err := cp.tinyBin.Decode(result2.Data[0], &readUser); err != nil {
+	if err := cp.Codec().Decode(result2.Data[0], &readUser); err != nil {
 		t.Fatalf("Failed to decode read user: %v", err)
 	}
 	if len(readUser) != 1 {

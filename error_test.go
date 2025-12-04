@@ -1,19 +1,20 @@
-package crudp
+package crudp_test
 
 import (
 	"context"
 	"testing"
+
+	"github.com/cdvelop/crudp"
 )
 
 func TestCrudP_ErrorHandling(t *testing.T) {
-	cp := New()
+	cp := crudp.NewDefault()
 
 	// Test with invalid packet
 	invalidPacket := []byte("invalid")
 	_, err := cp.ProcessPacket(context.Background(), invalidPacket)
-	if err != nil {
-		// Expected error for invalid packet
-		t.Logf("Correctly handled invalid packet: %v", err)
+	if err == nil {
+		t.Error("Expected error for invalid packet")
 	}
 
 	// Test with non-existent handler
@@ -23,8 +24,7 @@ func TestCrudP_ErrorHandling(t *testing.T) {
 	}
 
 	_, err = cp.ProcessPacket(context.Background(), invalidHandlerPacket)
-	if err != nil {
-		// Expected error for non-existent handler
-		t.Logf("Correctly handled non-existent handler: %v", err)
+	if err == nil {
+		t.Error("Expected error for non-existent handler")
 	}
 }

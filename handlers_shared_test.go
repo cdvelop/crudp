@@ -85,7 +85,7 @@ func (h *ValidatedHandler) ValidateField(fieldName, value string) error {
 // Shared tests
 func HandlerRegistrationShared(t *testing.T, cp *crudp.CrudP) {
 	t.Run("Explicit HandlerName", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		err := cp.RegisterHandler(&explicitNameHandler{})
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -98,7 +98,7 @@ func HandlerRegistrationShared(t *testing.T, cp *crudp.CrudP) {
 	})
 
 	t.Run("Reflection Name (snake_case)", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		err := cp.RegisterHandler(&UserController{})
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -111,7 +111,7 @@ func HandlerRegistrationShared(t *testing.T, cp *crudp.CrudP) {
 	})
 
 	t.Run("Nil Handler Error", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		err := cp.RegisterHandler(nil)
 		if err == nil {
 			t.Error("expected error for nil handler")
@@ -119,7 +119,7 @@ func HandlerRegistrationShared(t *testing.T, cp *crudp.CrudP) {
 	})
 
 	t.Run("Multiple Handlers", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		err := cp.RegisterHandler(
 			&explicitNameHandler{},
 			&UserController{},
@@ -143,7 +143,7 @@ func HandlerRegistrationShared(t *testing.T, cp *crudp.CrudP) {
 
 func HandlerValidationShared(t *testing.T, cp *crudp.CrudP) {
 	t.Run("Validation Passes", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		cp.RegisterHandler(&ValidatedHandler{})
 
 		ctx := context.Background()
@@ -157,7 +157,7 @@ func HandlerValidationShared(t *testing.T, cp *crudp.CrudP) {
 	})
 
 	t.Run("Validation Fails", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		cp.RegisterHandler(&ValidatedHandler{})
 
 		ctx := context.Background()
@@ -186,7 +186,7 @@ func HandlerValidationShared(t *testing.T, cp *crudp.CrudP) {
 
 func CRUDOperationsShared(t *testing.T, cp *crudp.CrudP) {
 	t.Run("Create Operation", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		cp.RegisterHandler(&UserController{})
 
 		ctx := context.Background()
@@ -204,7 +204,7 @@ func CRUDOperationsShared(t *testing.T, cp *crudp.CrudP) {
 	})
 
 	t.Run("Read Operation", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		cp.RegisterHandler(&UserController{})
 
 		ctx := context.Background()
@@ -222,7 +222,7 @@ func CRUDOperationsShared(t *testing.T, cp *crudp.CrudP) {
 	})
 
 	t.Run("Unimplemented Action", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		cp.RegisterHandler(&UserController{}) // Only has Create and Read
 
 		ctx := context.Background()
@@ -233,7 +233,7 @@ func CRUDOperationsShared(t *testing.T, cp *crudp.CrudP) {
 	})
 
 	t.Run("Invalid Handler ID", func(t *testing.T) {
-		cp := crudp.New()
+		cp := crudp.NewDefault()
 		cp.RegisterHandler(&UserController{})
 
 		ctx := context.Background()

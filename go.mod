@@ -3,6 +3,6 @@ module github.com/cdvelop/crudp
 go 1.25.2
 
 require (
-	github.com/cdvelop/tinybin v0.2.7
+	github.com/cdvelop/tinyjson v0.0.3
 	github.com/cdvelop/tinystring v0.12.0
 )

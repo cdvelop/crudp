@@ -123,7 +123,6 @@ func (cp *CrudP) CallHandler(ctx context.Context, handlerID uint8, action byte, 
 
 	return nil, Errf("action '%c' not implemented for handler: %s", action, handler.name)
 }
-
 // decodeWithKnownType decodes packet data using cached type information when available
 // This is the key method that enables handlers to receive concrete types instead of raw bytes
 func (cp *CrudP) decodeWithKnownType(packet *Packet, handlerID uint8) ([]any, error) {
@@ -169,8 +168,8 @@ func (cp *CrudP) decodeWithKnownType(packet *Packet, handlerID uint8) ([]any, er
 		// a proper instance factory based on your specific types.
 		targetPtr := handler
 
-		// Decode bytes into the concrete type using TinyBin instance
-		if err := cp.tinyBin.Decode(itemBytes, targetPtr); err != nil {
+		// Decode bytes into the concrete type using codec
+		if err := cp.codec.Decode(itemBytes, targetPtr); err != nil {
 			return nil, err
 		}
 

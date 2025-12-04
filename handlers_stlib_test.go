@@ -9,7 +9,7 @@ import (
 )
 
 func TestHandlers_Stdlib(t *testing.T) {
-	cp := crudp.New()
+	cp := crudp.NewDefault()
 
 	t.Run("Registration", func(t *testing.T) {
 		HandlerRegistrationShared(t, cp)

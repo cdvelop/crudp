@@ -30,11 +30,11 @@ type PacketResult struct {
 	Message     string  // Message for the user
 }
 
-// EncodePacket encodes a packet for a known handler using this CrudP's TinyBin instance
+// EncodePacket encodes a packet for a known handler using this CrudP's codec instance
 func (cp *CrudP) EncodePacket(action byte, handlerID uint8, reqID string, data ...any) ([]byte, error) {
 	encoded := make([][]byte, 0, len(data))
 	for _, item := range data {
-		bytes, err := cp.tinyBin.Encode(item)
+		bytes, err := cp.codec.Encode(item)
 		if err != nil {
 			return nil, err
 		}
@@ -48,26 +48,26 @@ func (cp *CrudP) EncodePacket(action byte, handlerID uint8, reqID string, data .
 		Data:      encoded,
 	}
 
-	return cp.tinyBin.Encode(packet)
+	return cp.codec.Encode(packet)
 }
 
-// DecodePacket decodes a packet using this CrudP's TinyBin instance
+// DecodePacket decodes a packet using this CrudP's codec instance
 func (cp *CrudP) DecodePacket(data []byte, packet *Packet) error {
-	return cp.tinyBin.Decode(data, packet)
+	return cp.codec.Decode(data, packet)
 }
 
-// DecodeData decodes the packet data using this CrudP's TinyBin instance
+// DecodeData decodes the packet data using this CrudP's codec instance
 func (cp *CrudP) DecodeData(packet *Packet, index int, target any) error {
 	if index >= len(packet.Data) {
 		return Errf("index out of range")
 	}
-	return cp.tinyBin.Decode(packet.Data[index], target)
+	return cp.codec.Decode(packet.Data[index], target)
 }
 
 // ProcessBatch automatically processes a batch of packets and returns batch results
 func (cp *CrudP) ProcessBatch(ctx context.Context, requestBytes []byte) ([]byte, error) {
 	var batchReq BatchRequest
-	if err := cp.tinyBin.Decode(requestBytes, &batchReq); err != nil {
+	if err := cp.codec.Decode(requestBytes, &batchReq); err != nil {
 		return cp.createErrorBatchResponse("decode_error", err)
 	}
 
@@ -86,7 +86,7 @@ func (cp *CrudP) ProcessBatch(ctx context.Context, requestBytes []byte) ([]byte,
 		Results: results,
 	}
 
-	return cp.tinyBin.Encode(batchResp)
+	return cp.codec.Encode(batchResp)
 }
 
 func (cp *CrudP) processSinglePacket(ctx context.Context, packet *Packet) (PacketResult, error) {
@@ -136,7 +136,7 @@ func (cp *CrudP) encodeResultToPacket(pr *PacketResult, result any) error {
 			if err != nil {
 				return err
 			}
-			encoded, err := cp.tinyBin.Encode(data)
+			encoded, err := cp.codec.Encode(data)
 			if err != nil {
 				return err
 			}
@@ -151,7 +151,7 @@ func (cp *CrudP) encodeResultToPacket(pr *PacketResult, result any) error {
 		if err != nil {
 			return err
 		}
-		encoded, err := cp.tinyBin.Encode(data)
+		encoded, err := cp.codec.Encode(data)
 		if err != nil {
 			return err
 		}
@@ -160,7 +160,7 @@ func (cp *CrudP) encodeResultToPacket(pr *PacketResult, result any) error {
 	}
 
 	// Case 3: Direct value
-	encoded, err := cp.tinyBin.Encode(result)
+	encoded, err := cp.codec.Encode(result)
 	if err != nil {
 		return err
 	}
@@ -175,7 +175,7 @@ func (cp *CrudP) createErrorBatchResponse(reqID string, err error) ([]byte, erro
 		Message:     err.Error(),
 	}
 
-	return cp.tinyBin.Encode(BatchResponse{Results: []PacketResult{result}})
+	return cp.codec.Encode(BatchResponse{Results: []PacketResult{result}})
 }
 
 // ProcessPacket processes a single packet (for backward compatibility)
@@ -187,7 +187,7 @@ func (cp *CrudP) ProcessPacket(ctx context.Context, requestBytes []byte) ([]byte
 	}
 
 	batchReq := BatchRequest{Packets: []Packet{packet}}
-	batchBytes, err := cp.tinyBin.Encode(batchReq)
+	batchBytes, err := cp.codec.Encode(batchReq)
 	if err != nil {
 		return nil, err
 	}
@@ -198,7 +198,7 @@ func (cp *CrudP) ProcessPacket(ctx context.Context, requestBytes []byte) ([]byte
 	}
 
 	var batchResp BatchResponse
-	if err := cp.tinyBin.Decode(batchRespBytes, &batchResp); err != nil {
+	if err := cp.codec.Decode(batchRespBytes, &batchResp); err != nil {
 		return nil, err
 	}
 
@@ -215,5 +215,5 @@ func (cp *CrudP) ProcessPacket(ctx context.Context, requestBytes []byte) ([]byte
 		Data:      result.Data,
 	}
 
-	return cp.tinyBin.Encode(responsePacket)
+	return cp.codec.Encode(responsePacket)
 }
