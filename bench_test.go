@@ -13,17 +13,17 @@ type BenchUser struct {
 	Age   uint8
 }
 
-func (u *BenchUser) Create(data ...any) []any {
+func (u *BenchUser) Create(ctx context.Context, data ...any) any {
 	created := make([]*BenchUser, 0, len(data))
 	for _, item := range data {
 		user := item.(*BenchUser)
 		user.ID = 123
 		created = append(created, user)
 	}
-	return []any{created}
+	return created
 }
 
-func (u *BenchUser) Read(data ...any) (any, error) {
+func (u *BenchUser) Read(ctx context.Context, data ...any) any {
 	results := make([]*BenchUser, 0, len(data))
 	for _, item := range data {
 		user := item.(*BenchUser)
@@ -34,21 +34,21 @@ func (u *BenchUser) Read(data ...any) (any, error) {
 			Age:   user.Age,
 		})
 	}
-	return results, nil
+	return results
 }
 
-func (u *BenchUser) Update(data ...any) (any, error) {
+func (u *BenchUser) Update(ctx context.Context, data ...any) any {
 	updated := make([]*BenchUser, 0, len(data))
 	for _, item := range data {
 		user := item.(*BenchUser)
 		user.Name = "Updated " + user.Name
 		updated = append(updated, user)
 	}
-	return updated, nil
+	return updated
 }
 
-func (u *BenchUser) Delete(data ...any) (any, error) {
-	return len(data), nil // Return count of deleted items
+func (u *BenchUser) Delete(ctx context.Context, data ...any) any {
+	return len(data) // Return count of deleted items
 }
 
 // Global variables to prevent compiler optimizations
@@ -72,7 +72,7 @@ func BenchmarkCrudP_Setup(b *testing.B) {
 	b.ReportAllocs()
 
 	for i := 0; i < b.N; i++ {
-		cp = New()
+		cp = NewDefault()
 		if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 			b.Fatalf("RegisterHandler failed: %v", err)
 		}
@@ -83,7 +83,7 @@ func BenchmarkCrudP_Setup(b *testing.B) {
 
 // BenchmarkCrudP_EncodePacket measures allocations for packet encoding
 func BenchmarkCrudP_EncodePacket(b *testing.B) {
-	cp := New()
+	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
 	}
@@ -106,7 +106,7 @@ func BenchmarkCrudP_EncodePacket(b *testing.B) {
 
 // BenchmarkCrudP_ProcessPacket measures allocations for complete packet processing
 func BenchmarkCrudP_ProcessPacket(b *testing.B) {
-	cp := New()
+	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
 	}
@@ -134,7 +134,7 @@ func BenchmarkCrudP_ProcessPacket(b *testing.B) {
 
 // BenchmarkCrudP_FullCycle measures allocations for complete encode->process->decode cycle
 func BenchmarkCrudP_FullCycle(b *testing.B) {
-	cp := New()
+	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
 	}
@@ -172,7 +172,7 @@ func BenchmarkCrudP_FullCycle(b *testing.B) {
 
 // BenchmarkCrudP_MultipleUsers measures allocations with multiple users in one packet
 func BenchmarkCrudP_MultipleUsers(b *testing.B) {
-	cp := New()
+	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
 	}
@@ -209,7 +209,7 @@ func BenchmarkCrudP_MultipleUsers(b *testing.B) {
 
 // BenchmarkCrudP_AllOperations measures allocations for all CRUD operations
 func BenchmarkCrudP_AllOperations(b *testing.B) {
-	cp := New()
+	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
 	}
@@ -241,7 +241,7 @@ func BenchmarkCrudP_AllOperations(b *testing.B) {
 
 // BenchmarkCrudP_LargePayload measures allocations with larger string data
 func BenchmarkCrudP_LargePayload(b *testing.B) {
-	cp := New()
+	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
 	}

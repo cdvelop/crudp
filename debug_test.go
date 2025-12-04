@@ -1,8 +1,10 @@
-package crudp
+package crudp_test
 
 import (
 	"context"
 	"testing"
+
+	"github.com/cdvelop/crudp"
 )
 
 // TestHandlerInstanceReuse verifies if the handler instances are being reused
@@ -10,10 +12,10 @@ import (
 // "estamos reutilizando la misma instancia del handler"
 func TestHandlerInstanceReuse(t *testing.T) {
 	// Initialize CRUDP with handlers
-	log := func(msg ...any) {
+	cp := crudp.NewDefault()
+	cp.SetLogger(func(msg ...any) {
 		t.Logf("DEBUG: %v", msg)
-	}
-	cp := New(log)
+	})
 	if err := cp.RegisterHandler(&User{}); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)
 	}
@@ -46,19 +48,19 @@ func TestHandlerInstanceReuse(t *testing.T) {
 	}
 
 	// Decode both responses to check the data
-	var packetResp1, packetResp2 Packet
-	if err := cp.tinyBin.Decode(response1, &packetResp1); err != nil {
+	var packetResp1, packetResp2 crudp.Packet
+	if err := cp.Codec().Decode(response1, &packetResp1); err != nil {
 		t.Fatalf("Failed to decode first response: %v", err)
 	}
 
-	if err := cp.tinyBin.Decode(response2, &packetResp2); err != nil {
+	if err := cp.Codec().Decode(response2, &packetResp2); err != nil {
 		t.Fatalf("Failed to decode second response: %v", err)
 	}
 
 	// Decode the response data to see what was actually processed
 	if len(packetResp1.Data) > 0 {
 		var result1 []*User
-		if err := cp.tinyBin.Decode(packetResp1.Data[0], &result1); err != nil {
+		if err := cp.Codec().Decode(packetResp1.Data[0], &result1); err != nil {
 			t.Fatalf("Failed to decode first result: %v", err)
 		}
 		t.Logf("First result: %+v", result1)
@@ -80,7 +82,7 @@ func TestHandlerInstanceReuse(t *testing.T) {
 
 	if len(packetResp2.Data) > 0 {
 		var result2 []*User
-		if err := cp.tinyBin.Decode(packetResp2.Data[0], &result2); err != nil {
+		if err := cp.Codec().Decode(packetResp2.Data[0], &result2); err != nil {
 			t.Fatalf("Failed to decode second result: %v", err)
 		}
 		t.Logf("Second result: %+v", result2)
@@ -106,7 +108,7 @@ func TestHandlerInstanceReuse(t *testing.T) {
 // For production use, implement proper instance factories for your specific types
 func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
 	t.Skip("Skipping test that demonstrates known limitation - handler instance reuse")
-	cp := New()
+	cp := crudp.NewDefault()
 
 	// Create a handler with initial state
 	originalHandler := &User{ID: 999, Name: "OriginalHandler", Email: "original@test.com"}
@@ -145,14 +147,14 @@ func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
 	}
 
 	// Decode the response to see what was processed
-	var responsePacket Packet
+	var responsePacket crudp.Packet
 	if err := cp.DecodePacket(response, &responsePacket); err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
 	}
 
 	if len(responsePacket.Data) > 0 {
 		var result []*User
-		if err := cp.tinyBin.Decode(responsePacket.Data[0], &result); err != nil {
+		if err := cp.Codec().Decode(responsePacket.Data[0], &result); err != nil {
 			t.Fatalf("Failed to decode result: %v", err)
 		}
 
@@ -164,7 +166,7 @@ func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
 
 // TestConcurrentHandlerAccess tests if concurrent access to handlers causes issues
 func TestConcurrentHandlerAccess(t *testing.T) {
-	cp := New()
+	cp := crudp.NewDefault()
 	if err := cp.RegisterHandler(&User{}); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)
 	}
@@ -190,14 +192,14 @@ func TestConcurrentHandlerAccess(t *testing.T) {
 			t.Fatalf("Failed to process packet %d: %v", i, err)
 		}
 
-		var responsePacket Packet
+		var responsePacket crudp.Packet
 		if err := cp.DecodePacket(response, &responsePacket); err != nil {
 			t.Fatalf("Failed to decode response %d: %v", i, err)
 		}
 
 		if len(responsePacket.Data) > 0 {
 			var result []*User
-			if err := cp.tinyBin.Decode(responsePacket.Data[0], &result); err != nil {
+			if err := cp.Codec().Decode(responsePacket.Data[0], &result); err != nil {
 				t.Fatalf("Failed to decode result %d: %v", i, err)
 			}
 

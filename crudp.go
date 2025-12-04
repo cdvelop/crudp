@@ -2,62 +2,83 @@ package crudp
 
 import (
 	"context"
-
-	"github.com/cdvelop/tinybin"
 )
 
-// actionHandler groups the CRUD functions for a record index
+// actionHandler groups CRUD functions for a registration index
 type actionHandler struct {
-	name    string // Handler name (snake_case)
-	index   uint8  // Position in handlers slice
-	handler any    // Original handler for type analysis
+	name    string
+	index   uint8
+	handler any
 	Create  func(context.Context, ...any) any
 	Read    func(context.Context, ...any) any
 	Update  func(context.Context, ...any) any
 	Delete  func(context.Context, ...any) any
 }
 
-// CrudP handles automatic processing of handlers
+// CrudP handles automatic handler processing
 // Uses slices instead of maps for TinyGo compatibility
 type CrudP struct {
-	handlers []actionHandler  // Dynamic table of handlers shared by index
-	tinyBin  *tinybin.TinyBin // TinyBin instance for encoding/decoding with caching
-
-	log func(msg ...any) // Optional logging function
-
-	apiEndpoint string // HTTP endpoint for binary protocol (default "/api")
+	config   *Config
+	handlers []actionHandler
+	codec    Codec
+	log      func(...any) // Never nil - uses no-op by default
 }
 
-// New creates a new CrudP instance
-// Optional arguments: logging function func(msg ...any), apiEndpoint string
-// eg: crudp.New(func(msg ...any) { log.Printf("CrudP: %v", msg) }, "/api/v1")
-func New(args ...any) *CrudP {
+// noopLogger is the default logger that does nothing
+func noopLogger(...any) {}
 
-	var log func(msg ...any) // default no logging
-	var apiEndpoint = "/api" // default endpoint
+// New creates a new CrudP instance with configuration
+func New(cfg *Config) *CrudP {
+	if cfg == nil {
+		cfg = DefaultConfig()
+	}
 
-	// Parse optional arguments
-	for _, arg := range args {
-		if lf, ok := arg.(func(msg ...any)); ok {
-			log = lf
-		}
-		if ep, ok := arg.(string); ok {
-			apiEndpoint = ep
-		}
+	// Assign default codec if not provided
+	codec := cfg.Codec
+	if codec == nil {
+		codec = getDefaultCodec()
 	}
 
 	return &CrudP{
-		tinyBin:     tinybin.New(), // Initialize TinyBin instance for caching and performance
-		log:         log,
-		apiEndpoint: apiEndpoint,
+		config: cfg,
+		codec:  codec,
+		log:    noopLogger, // Logger disabled by default
 	}
 }
 
-// routeToSSE handles Server-Sent Events routing based on broadcast targets
-func (cp *CrudP) routeToSSE(data any, broadcast []string, handlerID uint8) {
-	// TODO: Implement SSE broker routing
-	// For now, just log the routing information
-	if cp.log != nil {
-		cp.log("SSE Route: handlerID=%d, broadcast=%v, data=%v", handlerID, broadcast, data)
+// NewDefault creates CrudP with default configuration
+func NewDefault() *CrudP {
+	return New(nil)
+}
+
+// SetLogger configures a custom logging function
+// Pass nil to restore no-op logger
+func (cp *CrudP) SetLogger(logger func(...any)) {
+	if logger == nil {
+		cp.log = noopLogger
+		return
+	}
+	cp.log = logger
+}
+
+// DisableLogger disables logging
+func (cp *CrudP) DisableLogger() {
+	cp.log = noopLogger
+}
+
+// Config returns the current configuration (read-only)
+func (cp *CrudP) Config() *Config {
+	return cp.config
+}
+
+// Codec returns the current codec
+func (cp *CrudP) Codec() Codec {
+	return cp.codec
+}
+
+// SetCodec allows changing the codec at runtime
+func (cp *CrudP) SetCodec(codec Codec) {
+	if codec != nil {
+		cp.codec = codec
 	}
 }

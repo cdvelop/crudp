@@ -6,7 +6,7 @@ import (
 )
 
 func NewRouter() *crudp.CrudP {
-	cp := crudp.New()
+	cp := crudp.NewDefault()
 
 	// Get handlers from modules
 	handlers := modules.Init()

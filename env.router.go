@@ -22,7 +22,7 @@ func (cp *CrudP) BuildRouter() http.Handler {
 	mux := http.NewServeMux()
 
 	// 1. Register CRUDP's binary protocol endpoint (configurable)
-	mux.HandleFunc(cp.apiEndpoint, cp.handleBinaryProtocol)
+	mux.HandleFunc(cp.config.APIEndpoint, cp.handleBinaryProtocol)
 
 	// 2. Collect all global middleware from handlers
 	var globalMiddleware []func(http.Handler) http.Handler
