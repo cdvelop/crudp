@@ -65,7 +65,7 @@ var (
 )
 
 // BenchmarkCrudP_Setup measures allocations for CRUDP initialization
-func BenchmarkCrudP_Setup(b *testing.B) {
+func BenchmarkCrudPSetupShared(b *testing.B) {
 	var cp *CrudP
 
 	b.ResetTimer()
@@ -82,7 +82,7 @@ func BenchmarkCrudP_Setup(b *testing.B) {
 }
 
 // BenchmarkCrudP_EncodePacket measures allocations for packet encoding
-func BenchmarkCrudP_EncodePacket(b *testing.B) {
+func BenchmarkCrudPEncodePacketShared(b *testing.B) {
 	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
@@ -105,7 +105,7 @@ func BenchmarkCrudP_EncodePacket(b *testing.B) {
 }
 
 // BenchmarkCrudP_ProcessPacket measures allocations for complete packet processing
-func BenchmarkCrudP_ProcessPacket(b *testing.B) {
+func BenchmarkCrudPProcessPacketShared(b *testing.B) {
 	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
@@ -133,7 +133,7 @@ func BenchmarkCrudP_ProcessPacket(b *testing.B) {
 }
 
 // BenchmarkCrudP_FullCycle measures allocations for complete encode->process->decode cycle
-func BenchmarkCrudP_FullCycle(b *testing.B) {
+func BenchmarkCrudPFullCycleShared(b *testing.B) {
 	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
@@ -171,7 +171,7 @@ func BenchmarkCrudP_FullCycle(b *testing.B) {
 }
 
 // BenchmarkCrudP_MultipleUsers measures allocations with multiple users in one packet
-func BenchmarkCrudP_MultipleUsers(b *testing.B) {
+func BenchmarkCrudPMultipleUsersShared(b *testing.B) {
 	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
@@ -208,7 +208,7 @@ func BenchmarkCrudP_MultipleUsers(b *testing.B) {
 }
 
 // BenchmarkCrudP_AllOperations measures allocations for all CRUD operations
-func BenchmarkCrudP_AllOperations(b *testing.B) {
+func BenchmarkCrudPAllOperationsShared(b *testing.B) {
 	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)
@@ -240,7 +240,7 @@ func BenchmarkCrudP_AllOperations(b *testing.B) {
 }
 
 // BenchmarkCrudP_LargePayload measures allocations with larger string data
-func BenchmarkCrudP_LargePayload(b *testing.B) {
+func BenchmarkCrudPLargePayloadShared(b *testing.B) {
 	cp := NewDefault()
 	if err := cp.RegisterHandler(&BenchUser{}); err != nil {
 		b.Fatalf("RegisterHandler failed: %v", err)

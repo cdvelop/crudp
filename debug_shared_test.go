@@ -10,7 +10,7 @@ import (
 // TestHandlerInstanceReuse verifies if the handler instances are being reused
 // This test demonstrates the potential problem mentioned:
 // "estamos reutilizando la misma instancia del handler"
-func TestHandlerInstanceReuse(t *testing.T) {
+func HandlerInstanceReuseShared(t *testing.T) {
 	// Initialize CRUDP with handlers
 	cp := crudp.NewDefault()
 	cp.SetLogger(func(msg ...any) {
@@ -106,7 +106,7 @@ func TestHandlerInstanceReuse(t *testing.T) {
 // TestHandlerInstanceReuse_KNOWN_LIMITATION demonstrates the handler instance reuse issue
 // This test FAILS BY DESIGN to show that handlers are reused, which can cause data corruption
 // For production use, implement proper instance factories for your specific types
-func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
+func HandlerInstanceReuseKnownLimitationShared(t *testing.T) {
 	t.Skip("Skipping test that demonstrates known limitation - handler instance reuse")
 	cp := crudp.NewDefault()
 
@@ -165,7 +165,7 @@ func TestHandlerInstanceReuse_KNOWN_LIMITATION(t *testing.T) {
 }
 
 // TestConcurrentHandlerAccess tests if concurrent access to handlers causes issues
-func TestConcurrentHandlerAccess(t *testing.T) {
+func ConcurrentHandlerAccessShared(t *testing.T) {
 	cp := crudp.NewDefault()
 	if err := cp.RegisterHandler(&User{}); err != nil {
 		t.Fatalf("Failed to load handlers: %v", err)

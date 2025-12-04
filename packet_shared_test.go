@@ -3,7 +3,7 @@ package crudp_test
 import (
 	"bytes"
 	"context"
-	"log"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -113,25 +113,45 @@ func ActionConversionShared(t *testing.T) {
 func SSERoutingShared(t *testing.T, cp *crudp.CrudP) {
 	// Capture log output
 	var buf bytes.Buffer
-	log.SetOutput(&buf)
-	cp.SetLogger(log.Println)
+
+	cp.SetLogger(func(v ...any) {
+		for i, item := range v {
+			if i > 0 {
+				buf.WriteString(" ")
+			}
+			buf.WriteString(fmt.Sprint(item))
+		}
+		buf.WriteString("\n")
+	})
 
 	// Register handler
 	cp.RegisterHandler(&sseHandler{})
 
-	// Create packet
+	// Create packet with data - we need to encode an sseHandler instance
+	handlerData, err := cp.Codec().Encode(&sseHandler{})
+	if err != nil {
+		t.Fatalf("Failed to encode handler data: %v", err)
+	}
+
 	createPacket := crudp.Packet{
 		Action:    'c',
 		HandlerID: 0,
 		ReqID:     "test-sse",
+		Data:      [][]byte{handlerData},
 	}
 
 	// Process packet
 	batchReq := crudp.BatchRequest{Packets: []crudp.Packet{createPacket}}
+	t.Logf("BatchRequest before encoding: %+v", batchReq)
+	t.Logf("Packet count: %d", len(batchReq.Packets))
+	if len(batchReq.Packets) > 0 {
+		t.Logf("First packet: %+v", batchReq.Packets[0])
+	}
 	batchBytes, err := cp.Codec().Encode(batchReq)
 	if err != nil {
 		t.Fatalf("Failed to encode batch request: %v", err)
 	}
+	t.Logf("Encoded batch request: %s", string(batchBytes))
 	_, err = cp.ProcessBatch(context.Background(), batchBytes)
 	if err != nil {
 		t.Fatalf("Failed to process batch: %v", err)
@@ -146,6 +166,6 @@ func SSERoutingShared(t *testing.T, cp *crudp.CrudP) {
 		t.Error("Expected log output to contain 'Broadcasting to channel: channel2'")
 	}
 	if !strings.Contains(logOutput, `data: {"message":"broadcast"}`) {
-		t.Error("Expected log output to contain 'data: {\"message\":\"broadcast\"}'")
+		t.Errorf("Expected log output to contain 'data: {\"message\":\"broadcast\"}', got:\n%s", logOutput)
 	}
 }

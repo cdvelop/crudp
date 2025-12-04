@@ -7,7 +7,7 @@ import (
 	"github.com/cdvelop/crudp"
 )
 
-func TestCrudP_ErrorHandling(t *testing.T) {
+func CrudPErrorHandlingShared(t *testing.T) {
 	cp := crudp.NewDefault()
 
 	// Test with invalid packet

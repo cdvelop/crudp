@@ -14,8 +14,12 @@ type User struct {
 	Email string
 }
 
+func (u *User) Response() (any, []string, error) {
+	return u, nil, nil
+}
+
 func (u *User) Create(ctx context.Context, data ...any) any {
-	created := make([]*User, 0, len(data))
+	created := make([]crudp.Response, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
 		user := item.(*User)
@@ -26,7 +30,7 @@ func (u *User) Create(ctx context.Context, data ...any) any {
 }
 
 func (u *User) Read(ctx context.Context, data ...any) any {
-	results := make([]*User, 0, len(data))
+	results := make([]crudp.Response, 0, len(data))
 	for _, item := range data {
 		// item is concrete type (User), cast directly
 		user := item.(*User)
@@ -35,7 +39,7 @@ func (u *User) Read(ctx context.Context, data ...any) any {
 	return results
 }
 
-func TestCrudP_BasicFunctionality(t *testing.T) {
+func CrudPBasicFunctionalityShared(t *testing.T) {
 	// Initialize CRUDP with handlers
 	cp := crudp.NewDefault()
 	if err := cp.RegisterHandler(&User{}); err != nil {
