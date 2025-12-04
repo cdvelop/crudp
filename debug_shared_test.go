@@ -59,46 +59,42 @@ func HandlerInstanceReuseShared(t *testing.T) {
 
 	// Decode the response data to see what was actually processed
 	if len(packetResp1.Data) > 0 {
-		var result1 []*User
+		var result1 User
 		if err := cp.Codec().Decode(packetResp1.Data[0], &result1); err != nil {
 			t.Fatalf("Failed to decode first result: %v", err)
 		}
 		t.Logf("First result: %+v", result1)
 
 		// Check if the first user data is preserved correctly
-		if len(result1) > 0 {
-			t.Logf("First user details - Name: '%s', Email: '%s', ID: %d",
-				result1[0].Name, result1[0].Email, result1[0].ID)
-			if result1[0].Name != "Alice" {
-				t.Errorf("Expected first user name 'Alice', got '%s'", result1[0].Name)
-				t.Error("This indicates handler instance reuse problem!")
-			}
-			if result1[0].Email != "alice@example.com" {
-				t.Errorf("Expected first user email 'alice@example.com', got '%s'", result1[0].Email)
-				t.Error("This indicates handler instance reuse problem!")
-			}
+		t.Logf("First user details - Name: '%s', Email: '%s', ID: %d",
+			result1.Name, result1.Email, result1.ID)
+		if result1.Name != "Alice" {
+			t.Errorf("Expected first user name 'Alice', got '%s'", result1.Name)
+			t.Error("This indicates handler instance reuse problem!")
+		}
+		if result1.Email != "alice@example.com" {
+			t.Errorf("Expected first user email 'alice@example.com', got '%s'", result1.Email)
+			t.Error("This indicates handler instance reuse problem!")
 		}
 	}
 
 	if len(packetResp2.Data) > 0 {
-		var result2 []*User
+		var result2 User
 		if err := cp.Codec().Decode(packetResp2.Data[0], &result2); err != nil {
 			t.Fatalf("Failed to decode second result: %v", err)
 		}
 		t.Logf("Second result: %+v", result2)
 
 		// Check if the second user data is preserved correctly
-		if len(result2) > 0 {
-			t.Logf("Second user details - Name: '%s', Email: '%s', ID: %d",
-				result2[0].Name, result2[0].Email, result2[0].ID)
-			if result2[0].Name != "Bob" {
-				t.Errorf("Expected second user name 'Bob', got '%s'", result2[0].Name)
-				t.Error("This indicates handler instance reuse problem!")
-			}
-			if result2[0].Email != "bob@example.com" {
-				t.Errorf("Expected second user email 'bob@example.com', got '%s'", result2[0].Email)
-				t.Error("This indicates handler instance reuse problem!")
-			}
+		t.Logf("Second user details - Name: '%s', Email: '%s', ID: %d",
+			result2.Name, result2.Email, result2.ID)
+		if result2.Name != "Bob" {
+			t.Errorf("Expected second user name 'Bob', got '%s'", result2.Name)
+			t.Error("This indicates handler instance reuse problem!")
+		}
+		if result2.Email != "bob@example.com" {
+			t.Errorf("Expected second user email 'bob@example.com', got '%s'", result2.Email)
+			t.Error("This indicates handler instance reuse problem!")
 		}
 	}
 }
@@ -153,14 +149,12 @@ func HandlerInstanceReuseKnownLimitationShared(t *testing.T) {
 	}
 
 	if len(responsePacket.Data) > 0 {
-		var result []*User
+		var result User
 		if err := cp.Codec().Decode(responsePacket.Data[0], &result); err != nil {
 			t.Fatalf("Failed to decode result: %v", err)
 		}
 
-		if len(result) > 0 {
-			t.Logf("Processed result: %+v", result[0])
-		}
+		t.Logf("Processed result: %+v", result)
 	}
 }
 
@@ -198,15 +192,13 @@ func ConcurrentHandlerAccessShared(t *testing.T) {
 		}
 
 		if len(responsePacket.Data) > 0 {
-			var result []*User
+			var result User
 			if err := cp.Codec().Decode(responsePacket.Data[0], &result); err != nil {
 				t.Fatalf("Failed to decode result %d: %v", i, err)
 			}
 
-			if len(result) > 0 {
-				results[i] = result[0].Name
-				t.Logf("Processed user %d: %s (expected %s)", i, result[0].Name, user.Name)
-			}
+			results[i] = result.Name
+			t.Logf("Processed user %d: %s (expected %s)", i, result.Name, user.Name)
 		}
 	}
 

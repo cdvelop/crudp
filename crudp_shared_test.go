@@ -88,15 +88,17 @@ func CrudPBasicFunctionalityShared(t *testing.T) {
 		t.Errorf("Expected success, got failure: %s", result.Message)
 	}
 
-	var createdUser []*User
+	// Handler returns []Response, so each element in Data is a separate User object
+	if len(result.Data) != 1 {
+		t.Fatalf("Expected 1 data element, got %d", len(result.Data))
+	}
+
+	var createdUser User
 	if err := cp.Codec().Decode(result.Data[0], &createdUser); err != nil {
 		t.Fatalf("Failed to decode created user: %v", err)
 	}
-	if len(createdUser) != 1 {
-		t.Fatalf("Expected 1 created user, got %d", len(createdUser))
-	}
-	if createdUser[0].ID != 123 {
-		t.Errorf("Expected created user ID 123, got %d", createdUser[0].ID)
+	if createdUser.ID != 123 {
+		t.Errorf("Expected created user ID 123, got %d", createdUser.ID)
 	}
 
 	// Test Read operation
@@ -141,14 +143,16 @@ func CrudPBasicFunctionalityShared(t *testing.T) {
 		t.Errorf("Expected success, got failure: %s", result2.Message)
 	}
 
-	var readUser []*User
+	// Handler returns []Response, so each element in Data is a separate User object
+	if len(result2.Data) != 1 {
+		t.Fatalf("Expected 1 data element, got %d", len(result2.Data))
+	}
+
+	var readUser User
 	if err := cp.Codec().Decode(result2.Data[0], &readUser); err != nil {
 		t.Fatalf("Failed to decode read user: %v", err)
 	}
-	if len(readUser) != 1 {
-		t.Fatalf("Expected 1 read user, got %d", len(readUser))
-	}
-	if readUser[0].Name != "Found John" {
-		t.Errorf("Expected read user name 'Found John', got '%s'", readUser[0].Name)
+	if readUser.Name != "Found John" {
+		t.Errorf("Expected read user name 'Found John', got '%s'", readUser.Name)
 	}
 }

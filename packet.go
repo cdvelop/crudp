@@ -17,12 +17,12 @@ type Packet struct {
 
 // BatchRequest is what is sent in the POST /sync
 type BatchRequest struct {
-	Packets []*Packet `json:"packets"`
+	Packets []Packet `json:"packets"`
 }
 
 // BatchResponse is what is received by SSE
 type BatchResponse struct {
-	Results []*PacketResult `json:"results"`
+	Results []PacketResult `json:"results"`
 }
 
 type PacketResult struct {

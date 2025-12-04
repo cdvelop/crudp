@@ -127,17 +127,12 @@ func SSERoutingShared(t *testing.T, cp *crudp.CrudP) {
 	// Register handler
 	cp.RegisterHandler(&sseHandler{})
 
-	// Create packet with data - we need to encode an sseHandler instance
-	handlerData, err := cp.Codec().Encode(&sseHandler{})
-	if err != nil {
-		t.Fatalf("Failed to encode handler data: %v", err)
-	}
-
+	// Create packet without data - SSE handler doesn't need input
 	createPacket := crudp.Packet{
 		Action:    'c',
 		HandlerID: 0,
 		ReqID:     "test-sse",
-		Data:      [][]byte{handlerData},
+		Data:      [][]byte{}, // Empty data slice
 	}
 
 	// Process packet
