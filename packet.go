@@ -103,7 +103,7 @@ func (cp *CrudP) processSinglePacket(ctx context.Context, packet *Packet) (Packe
 	}
 
 	// Call handler
-	result, err := cp.callHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
+	result, err := cp.CallHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
 	if err != nil {
 		pr.MessageType = uint8(Msg.Error)
 		pr.Message = err.Error()
