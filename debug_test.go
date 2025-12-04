@@ -46,19 +46,19 @@ func TestHandlerInstanceReuse(t *testing.T) {
 	}
 
 	// Decode both responses to check the data
-	var batchResp1, batchResp2 BatchResponse
-	if err := cp.tinyBin.Decode(response1, &batchResp1); err != nil {
+	var packetResp1, packetResp2 Packet
+	if err := cp.tinyBin.Decode(response1, &packetResp1); err != nil {
 		t.Fatalf("Failed to decode first response: %v", err)
 	}
 
-	if err := cp.tinyBin.Decode(response2, &batchResp2); err != nil {
+	if err := cp.tinyBin.Decode(response2, &packetResp2); err != nil {
 		t.Fatalf("Failed to decode second response: %v", err)
 	}
 
 	// Decode the response data to see what was actually processed
-	if len(batchResp1.Results) > 0 && len(batchResp1.Results[0].Data) > 0 {
+	if len(packetResp1.Data) > 0 {
 		var result1 []*User
-		if err := cp.tinyBin.Decode(batchResp1.Results[0].Data, &result1); err != nil {
+		if err := cp.tinyBin.Decode(packetResp1.Data[0], &result1); err != nil {
 			t.Fatalf("Failed to decode first result: %v", err)
 		}
 		t.Logf("First result: %+v", result1)
@@ -78,9 +78,9 @@ func TestHandlerInstanceReuse(t *testing.T) {
 		}
 	}
 
-	if len(batchResp2.Results) > 0 && len(batchResp2.Results[0].Data) > 0 {
+	if len(packetResp2.Data) > 0 {
 		var result2 []*User
-		if err := cp.tinyBin.Decode(batchResp2.Results[0].Data, &result2); err != nil {
+		if err := cp.tinyBin.Decode(packetResp2.Data[0], &result2); err != nil {
 			t.Fatalf("Failed to decode second result: %v", err)
 		}
 		t.Logf("Second result: %+v", result2)

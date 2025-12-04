@@ -8,10 +8,10 @@ import (
 
 // actionHandler groups the CRUD functions for a record index
 type actionHandler struct {
-	Create func(context.Context, ...any) []any
-	Read   func(context.Context, ...any) []any
-	Update func(context.Context, ...any) []any
-	Delete func(context.Context, ...any) []any
+	Create func(context.Context, ...any) any
+	Read   func(context.Context, ...any) any
+	Update func(context.Context, ...any) any
+	Delete func(context.Context, ...any) any
 
 	// Store original handler for type analysis
 	Handler any
