@@ -29,23 +29,20 @@ func (h *UserHandler) Create(ctx context.Context, data ...any) any {
 
 ## Documentation
 
-### Architecture
+### Core Concepts
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): **Main specification and implementation status**
-
-### Implementation Issues
-
-- [`docs/issues/IMPL_001_PACKET_STRUCTURE.md`](docs/issues/IMPL_001_PACKET_STRUCTURE.md): Packet and response structures
-- [`docs/issues/IMPL_002_HANDLER_REGISTRATION.md`](docs/issues/IMPL_002_HANDLER_REGISTRATION.md): Handler interfaces and registration
-- [`docs/issues/IMPL_003_BROKER_BATCHING.md`](docs/issues/IMPL_003_BROKER_BATCHING.md): Queue and batch consolidation
-- [`docs/issues/IMPL_004_SSE_COMMUNICATION.md`](docs/issues/IMPL_004_SSE_COMMUNICATION.md): SSE server and client
-- [`docs/issues/IMPL_005_CONFIG_SYSTEM.md`](docs/issues/IMPL_005_CONFIG_SYSTEM.md): Configuration options
-- [`docs/issues/IMPL_006_RESPONSE_ROUTING.md`](docs/issues/IMPL_006_RESPONSE_ROUTING.md): Response interface and routing
+- [`docs/CONFIG.md`](docs/CONFIG.md): Configuration system
+- [`docs/HANDLER_REGISTER.md`](docs/HANDLER_REGISTER.md): Handler interfaces and registration
+- [`docs/RESPONSE.md`](docs/RESPONSE.md): Returning responses from handlers
+- [`docs/SSE_BROKER.md`](docs/SSE_BROKER.md): SSE Broker and Packet Batching
+- [`docs/PACKET_STRUCTURE.md`](docs/PACKET_STRUCTURE.md): Packet and response structures
 
 ### Guides
 
 - [`docs/INTEGRATION_GUIDE.md`](docs/INTEGRATION_GUIDE.md): How to integrate CRUDP
 - [`docs/FILE_UPLOAD.md`](docs/FILE_UPLOAD.md): File handling with "Upload & Reference" pattern
+- [`docs/HTTP_ROUTES_AND_MIDDLEWARE.md`](docs/HTTP_ROUTES_AND_MIDDLEWARE.md): HTTP Routes and Middleware
 - [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md): Supported data types
 
 ### Reference

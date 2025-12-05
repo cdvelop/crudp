@@ -1,197 +1,53 @@
-# SSE Broker: Bidirectional HTTP Communication
+# SSE Broker and Packet Batching
 
 ## Overview
 
-SSE Broker enables bidirectional communication between client (WASM) and server using HTTP/SSE, replacing WebSocket dependency. CRUDP manages queuing, batching, and automatic reconnection on both sides.
+CRUDP includes a broker that handles the batching and consolidation of outgoing packets. This is particularly useful in client-side (WASM) applications to minimize the number of HTTP requests sent to the server.
 
-**Key Features:**
-- **Bidirectional:** Client initiates requests, server streams responses via SSE
-- **Batch Accumulation:** Server waits configurable time to batch responses (mailman pattern)
-- **User-Based Routing:** Responses routed per-user, per-role, or broadcast
-- **Automatic Queueing:** Failed packets queue locally and retry on reconnect
-- **Optional Async:** Handlers opt-in via `WaitingTime()` interface
-- **Shared Logic:** Core broker code reused between client/server
+## The Broker
 
----
+The broker is an internal component of CRUDP that is automatically initialized when you create a new `CrudP` instance. It is responsible for:
 
-## Architecture
+-   **Queueing:** Packets are added to a queue instead of being sent immediately.
+-   **Consolidation:** Packets with the same handler and action are merged into a single packet.
+-   **Batching:** The broker waits for a configurable amount of time (the "batch window") to collect multiple packets before sending them as a single batch.
+-   **Flushing:** When the batch window timer expires, the broker "flushes" the queue, sending all the packets in a single request.
 
-### File Structure
+## How it Works
 
-```
-crudp/
-├── sse.broker.go           # Shared broker logic (queue, batching, user correlation)
-├── sse.broker.client.go    # WASM client SSE EventSource handling
-├── sse.broker.server.go    # Server SSE endpoint + batch accumulator
-├── interfaces.go           # WaitingTime, UserProvider, KVStore interfaces
-└── config.go               # Config with defaults
-```
+1.  When you call a method that sends a packet (e.g., `EnqueuePacket`), the packet is added to the broker's queue.
+2.  If a packet with the same handler and action already exists in the queue, the new packet's data is appended to the existing packet.
+3.  A timer is started (or reset) for the duration of the `BatchWindow` (configured in the `Config` struct).
+4.  When the timer expires, the broker sends all the packets in the queue as a single batch request.
 
-### [Communication Flow](diagrams/SSE_BROKER_FLOW.md)
+## Configuration
 
----
+The broker's behavior is controlled by the `BatchWindow` setting in the `Config` struct.
 
-## Core Interfaces
-
-### 1. See [WaitingTime Interface (Optional)](WAITING_TIME_INTERFACE.md) for details.
-
-### 2. See [UserProvider Interface (Required for SSE)](USER_PROVIDER.md) for details.
-
-### 3. See [KVStore Interface (Optional for Persistence)](DATABASE_CONFIG.md) for detailed.
-
-### 4. See [Config Structure](CONFIG.md) for details.
-
-### 5. Broker Queue Structure (Private)
-
-**File: `sse.broker.go`**
 ```go
-// queuedPacket represents a packet waiting to be sent/processed
-type queuedPacket struct {
-    packet    Packet
-    timestamp int64  // Unix timestamp for retry logic use github.com/cdvelop/unixid
-    attempts  int    // Retry counter
-    userID    string // For user-based routing
-}
+// Config contains CrudP configuration
+type Config struct {
+    // ...
 
-// brokerQueue manages packet queueing for offline/retry scenarios
-// Private implementation detail - not exposed in public API
-type brokerQueue struct {
-    packets       []queuedPacket
-    tinyBin       *tinybin.TinyBin
-    batchWindow   int  // From Config.BatchWindow
-    maxRetries    int  // From Config.MaxRetries
-    retryInterval int  // From Config.RetryInterval
-}
-
-// Enqueue adds packet to local queue
-func (bq *brokerQueue) Enqueue(packet Packet, userID string) error
-
-// DequeueBatch retrieves next batch for sending (waits BatchWindow ms)
-func (bq *brokerQueue) DequeueBatch(maxSize int) []queuedPacket
-
-// RequeueFailed puts failed packets back with exponential backoff
-func (bq *brokerQueue) RequeueFailed(reqIDs []string) error
-```
-
-### 6. SSE Routing Strategy (Dependency Injection)
-
-See [RESPONSE.md](RESPONSE.md) for details.
-
----
-
-## Design Decisions Summary
-
-### A. Handler Detection
-**Resolved:** `WaitingTime()` is optional. If not implemented or returns 0, handler uses synchronous HTTP. Checked at registration and cached in handler metadata.
-
-### B. Batch Accumulation (Mailman Pattern)
-**Resolved:** Server accumulates responses in `BatchWindow` (default 100ms). If multiple events arrive within window, they're batched into single SSE event containing `BatchResponse`. This reduces network overhead.
-
-**Example:** 
-- Event 1 arrives at T+0ms for User A
-- Event 2 arrives at T+2ms for User B
-- Server waits until T+100ms, then sends single BatchResponse with both results
-
-### C. User-Based Routing
-**Resolved:** Requires `UserProvider` interface injected via `Config`. Server correlates requests by UserID extracted from context. SSE responses can target:
-1. **Specific User:** `RouteTarget{UserID: "user123"}`
-2. **Role-Based:** `RouteTarget{Role: "admin"}` (all admins receive)
-3. **Broadcast:** `RouteTarget{All: true}` (all connected users)
-
-**Resolved:** Handlers use dependency injection for explicit routing. See "Routing Strategy" below.
-
-### D. Reconnection Logic
-**Resolved:** Exponential backoff with configurable `MaxRetries` and `RetryInterval` in `Config`. Default: 3 retries, 1s base interval (1s, 2s, 4s).
-
-### E. SSE Connection Lifecycle
-**Resolved:** 
-- **Multiplexed Connection:** Single SSE connection per user (tubo maestro).
-- **Efficient:** Handles all traffic for that user (chat, notifications, data) in one stream.
-- **Routing:** Client router dispatches messages to correct handlers using `HandlerID` in packet.
-
-### F. Queue Persistence
-**Resolved:** Optional `KVStore` interface in `Config`. User provides implementation (localStorage for WASM, memory/DB for server). See [DATABASE_CONFIG.md](DATABASE_CONFIG.md) for details.
-
-### G. ListenAndServe() Behavior
-**Resolved:** 
-- **Client (WASM):** Blocks with `select{}`, starts background SSE listeners
-- **Server:** Blocks with `http.ListenAndServe()`, configurable port via `Config`
-
----
-
-## Proposed API
-
-### CrudP Constructor Changes
-
-**File: `crudp.go`**
-```go
-// New creates CrudP instance with config
-// Accepts: *Config (required)
-// Logger is set via config.Logger
-func New(config *Config) *CrudP {
-    if config == nil {
-        config = DefaultConfig()
-    }
+    // BatchWindow in milliseconds. Default: 50
+    BatchWindow int
     
-    return &CrudP{
-        tinyBin: tinybin.New(),
-        log:     config.Logger,
-        config:  config,
-        brokerQueue: &brokerQueue{
-            tinyBin:       tinybin.New(),
-            batchWindow:   config.BatchWindow,
-            maxRetries:    config.MaxRetries,
-            retryInterval: config.RetryInterval,
-        },
-    }
+    // ...
 }
 ```
 
-### Client Side (WASM)
+## `tinytime` Dependency
 
-**File: `web/client.go`**
+The broker uses the `tinytime` library for its timer, which is compatible with WebAssembly.
+
+## Manual Flushing
+
+You can manually flush the broker's queue at any time by calling the `FlushNow()` method on the broker.
+
 ```go
-//go:build wasm
-package main
+// Get the broker from the CrudP instance
+broker := cp.Broker()
 
-import (
-    "myProject/pkg/router"
-)
-
-func main() {
-    cp := router.NewRouter()
-    
-    // por definir
- 
-
-    select {} // Keep main alive
-}
-```
-
-### Server Side
-
-**File: `web/server.go`**
-```go
-//go:build !wasm
-package main
-
-import (
-    "http"
-    "myProject/pkg/router"
-)
-
-func main() {
-    
-    cp := router.NewRouter()
-    // Custom config
-    cp.SetPort(":8080")
-    cp.SetBatchWindow(10) // 10ms batching
-    
-    handler := cp.BuildRouter()
-
-    // Blocks forever, starts HTTP server
-    if err := http.ListenAndServe(":8080", handler); err != nil {
-        panic(err)
-    }   
-}
+// Force an immediate flush
+broker.FlushNow()
 ```

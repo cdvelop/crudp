@@ -1,164 +1,91 @@
-# Advanced: HTTP Routes & Middleware System
+# Handler Registration
 
-**Prerequisites:** Read [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md) first for basic CRUDP integration.
+## Core Concepts
 
-**Purpose:** This guide covers advanced features for handlers that need custom HTTP routes or global middleware, beyond the binary protocol.
+Handlers are the core of a CRUDP application. They implement the business logic for your data models. Handlers are registered with a `CrudP` instance, which then dispatches incoming requests to the appropriate handler and method.
 
-## Core Principles
+## CRUD Interfaces
 
-1. **Optional HTTP Routes:** Add custom endpoints (e.g., `/upload`, `/export`) via `HttpRouteProvider`
-2. **Global Middleware:** Provide middleware that applies to ALL routes via `MiddlewareProvider`
-3. **Centralized Security:** All routes are automatically wrapped with registered middleware
+Handlers implement one or more of the following interfaces to handle CRUD operations:
 
----
-
-## 1. Optional HTTP Interfaces
-
-**File: `env.router.go` (CRUDP package)**
+**File: `interfaces.go`**
 ```go
-//go:build !wasm
 package crudp
 
-import "net/http"
+import "context"
 
-// Optional: Add custom HTTP routes (e.g., /upload, /export)
-type HttpRouteProvider interface {
-    RegisterRoutes(mux *http.ServeMux)
+// Creator handles create operations.
+type Creator interface {
+    Create(ctx context.Context, data ...any) any
 }
 
-// Optional: Provide global middleware (authentication, logging, etc.)
-type MiddlewareProvider interface {
-    Middleware(next http.Handler) http.Handler
+// Reader handles read operations.
+type Reader interface {
+    Read(ctx context.Context, data ...any) any
+}
+
+// Updater handles update operations.
+type Updater interface {
+    Update(ctx context.Context, data ...any) any
+}
+
+// Deleter handles delete operations.
+type Deleter interface {
+    Delete(ctx context.Context, data ...any) any
 }
 ```
 
-**Note:** Binary protocol interfaces (`Creator`, `Reader`, etc.) are covered in [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md).
+**Key Points:**
 
-## 2. CRUDP Router Implementation
+-   Each CRUD method now returns a single `any` value.
+-   This `any` value can be a simple struct, a slice of structs, or a `Response` interface for more advanced scenarios like SSE broadcasting.
 
-**File: `env.router.go` (CRUDP package, server-only)**
+## Handler Naming
+
+CRUDP automatically determines a handler's name, which is used to route requests. This can be done in two ways:
+
+1.  **By Convention (Reflection):** If a handler does not explicitly provide a name, CRUDP will use reflection to get the type name of the handler struct and convert it to `snake_case`. For example, a `UserHandler` struct will be named `"user_handler"`.
+2.  **Explicitly (NamedHandler):** A handler can implement the `NamedHandler` interface to provide a custom name.
+
+**File: `interfaces.go`**
 ```go
-//go:build !wasm
-package crudp
-
-import (
-    "net/http"
-)
-
-// BuildRouter creates the complete HTTP handler with routes and middleware
-func (cp *CrudP) BuildRouter() http.Handler {
-    mux := http.NewServeMux()
-    
-    // 1. Register CRUDP's binary protocol endpoint (configurable)
-    mux.HandleFunc(cp.apiEndpoint, cp.handleBinaryProtocol)
-    
-    // 2. Collect all global middleware from handlers
-    var globalMiddleware []func(http.Handler) http.Handler
-    for _, h := range cp.handlers {
-        if mwProvider, ok := h.Handler.(MiddlewareProvider); ok {
-            globalMiddleware = append(globalMiddleware, mwProvider.Middleware)
-        }
-    }
-    
-    // 3. Let handlers register their custom HTTP routes
-    for _, h := range cp.handlers {
-        if routeProvider, ok := h.Handler.(HttpRouteProvider); ok {
-            routeProvider.RegisterRoutes(mux)
-        }
-    }
-    
-    // 4. Wrap everything with global middleware (applied in registration order)
-    handler := mux
-    for _, mw := range globalMiddleware {
-        handler = mw(handler)
-    }
-    
-    return handler
-}
-
-// handleBinaryProtocol processes CRUDP binary requests
-func (cp *CrudP) handleBinaryProtocol(w http.ResponseWriter, r *http.Request) {
-    // ... existing ProcessPacket logic adapted to HTTP
+// NamedHandler allows a handler to provide a custom name.
+type NamedHandler interface {
+    HandlerName() string
 }
 ```
 
-## 3. Handler with HTTP Routes & Middleware
+## Validation
 
-**File: `modules/users/back.server.go`** (server-only code)
+CRUDP provides two optional interfaces for data validation:
+
+-   `Validator`: For validating the entire data payload before a CRUD operation is executed.
+-   `FieldValidator`: For validating individual fields, often used for UI feedback.
+
+**File: `interfaces.go`**
 ```go
-//go:build !wasm
-
-package users
-
-import (
-    "net/http"
-)
-
-// Optional: Implement custom HTTP routes
-func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
-    mux.Handle("POST /users/avatar", http.HandlerFunc(h.handleAvatarUpload))
-    mux.Handle("GET /users/export", http.HandlerFunc(h.handleExport))
+// Validator validates the entire data payload.
+type Validator interface {
+    Validate(action byte, data ...any) error
 }
 
-// Optional: Provide global middleware (e.g., authentication)
-func (h *Handler) Middleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        // Authentication logic applied to ALL routes
-        if !isAuthenticated(r) {
-            http.Error(w, "Unauthorized", http.StatusUnauthorized)
-            return
-        }
-        next.ServeHTTP(w, r)
-    })
-}
-
-func (h *Handler) handleAvatarUpload(w http.ResponseWriter, r *http.Request) {
-    // Custom HTTP logic
-}
-
-func (h *Handler) handleExport(w http.ResponseWriter, r *http.Request) {
-    // Custom HTTP logic
+// FieldValidator validates a single field.
+type FieldValidator interface {
+    ValidateField(fieldName string, value string) error
 }
 ```
 
-## 3.1 Middleware-Only Handler
+If a handler implements the `Validator` interface, its `Validate` method will be called before the corresponding CRUD method is executed.
 
-**File: `modules/logging/logging.go`**
+## `RegisterHandler`
+
+The `RegisterHandler` method on the `CrudP` instance is used to register one or more handlers.
+
 ```go
-//go:build !wasm
-package logging
-
-import (
-    "net/http"
-    "time"
-)
-
-type Handler struct{
-    log func(args ...any)
-}
-
-// This handler only provides middleware, no CRUD operations
-func (h *Handler) Middleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        start := time.Now()
-        h.log("Request: %s %s", r.Method, r.URL.Path)
-        next.ServeHTTP(w, r)
-        h.log("Completed in %v", time.Since(start))
-    })
-}
+func (cp *CrudP) RegisterHandler(handlers ...any) error
 ```
 
-## 3.2 File Upload Example
-
-**See:** [FILE_UPLOAD.md](FILE_UPLOAD.md) for complete implementation using `HttpRouteProvider`.
-
----
-
-## Key Considerations
-
-- **Middleware Order:** Applied in registration order. Put authentication first.
-- **Optional:** Only implement these interfaces when you need custom HTTP routes or middleware.
-- **No Impact on Binary Protocol:** Handlers without these interfaces work normally via CRUDP's binary protocol.
-- **Server & Client Setup:** See [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md) for `NewRouter()` usage.
-
-
+During registration, CRUDP will:
+1.  Determine the handler's name.
+2.  Bind the handler's `Create`, `Read`, `Update`, and `Delete` methods.
+3.  Cache the handler for later use.
