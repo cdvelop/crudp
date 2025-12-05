@@ -48,9 +48,7 @@ func (cp *CrudP) RegisterHandler(handlers ...any) error {
 
 		cp.bind(uint8(i), h)
 
-		if cp.log != nil {
-			cp.log("registered handler:", name, "at index", i)
-		}
+		cp.log("registered handler:", name, "at index", i)
 	}
 
 	return nil
@@ -135,9 +133,7 @@ func (cp *CrudP) decodeWithKnownType(packet *Packet, handlerID uint8) ([]any, er
 
 	handler := cp.handlers[handlerID].handler
 	if handler == nil {
-		if cp.log != nil {
-			cp.log("decodeWithKnownType: handler is nil, fallback to raw bytes")
-		}
+		cp.log("decodeWithKnownType: handler is nil, fallback to raw bytes")
 		return cp.decodeWithRawBytes(packet)
 	}
 

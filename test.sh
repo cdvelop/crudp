@@ -26,21 +26,9 @@ run_tests() {
   if [ $rc -ne 0 ]; then
     printf "❌ FAILED\n\n"
     if [ -n "$prefix" ]; then
-      eval "$prefix go test -v ./... $tags" 2>&1 | awk '
-        /^--- FAIL:/ { in_fail=1; print; next }
-        /^--- (PASS|SKIP):/ { in_fail=0; next }
-        /^=== RUN/ { next }
-        in_fail && !/'"$NOISE"'/ { print }
-        /^FAIL/ { print }
-      ' || true
+      eval "$prefix go test -v ./... $tags" 2>&1 | grep -v "$NOISE" || true
     else
-      go test -v ./... $tags 2>&1 | awk '
-        /^--- FAIL:/ { in_fail=1; print; next }
-        /^--- (PASS|SKIP):/ { in_fail=0; next }
-        /^=== RUN/ { next }
-        in_fail && !/'"$NOISE"'/ { print }
-        /^FAIL/ { print }
-      ' || true
+      go test -v ./... $tags 2>&1 | grep -v "$NOISE" || true
     fi
     return $rc
   fi

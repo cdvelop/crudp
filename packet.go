@@ -67,20 +67,14 @@ func (cp *CrudP) DecodeData(packet *Packet, index int, target any) error {
 
 // ProcessBatch automatically processes a batch of packets and returns batch results
 func (cp *CrudP) ProcessBatch(ctx context.Context, requestBytes []byte) ([]byte, error) {
-	if cp.log != nil {
-		cp.log("ProcessBatch called with bytes:", len(requestBytes))
-	}
+	cp.log("ProcessBatch called with bytes:", len(requestBytes))
 	var batchReq BatchRequest
 	if err := cp.codec.Decode(requestBytes, &batchReq); err != nil {
-		if cp.log != nil {
-			cp.log("ProcessBatch decode error:", err)
-		}
+		cp.log("ProcessBatch decode error:", err)
 		return cp.createErrorBatchResponse("decode_error", err)
 	}
 
-	if cp.log != nil {
-		cp.log("ProcessBatch decoded packets:", len(batchReq.Packets))
-	}
+	cp.log("ProcessBatch decoded packets:", len(batchReq.Packets))
 
 	results := make([]PacketResult, 0, len(batchReq.Packets))
 
@@ -116,17 +110,13 @@ func (cp *CrudP) processSinglePacket(ctx context.Context, packet *Packet) (Packe
 	// Call handler
 	result, err := cp.CallHandler(ctx, packet.HandlerID, packet.Action, decodedData...)
 	if err != nil {
-		if cp.log != nil {
-			cp.log("processSinglePacket CallHandler error:", err)
-		}
+		cp.log("processSinglePacket CallHandler error:", err)
 		pr.MessageType = uint8(Msg.Error)
 		pr.Message = err.Error()
 		return pr, err
 	}
 
-	if cp.log != nil {
-		cp.log("processSinglePacket CallHandler success, result type:", reflect.TypeOf(result))
-	}
+	cp.log("processSinglePacket CallHandler success, result type:", reflect.TypeOf(result))
 
 	// Process result - can be multiple Response
 	if err := cp.encodeResultToPacket(&pr, result); err != nil {
@@ -147,9 +137,7 @@ func (cp *CrudP) encodeResultToPacket(pr *PacketResult, result any) error {
 	}
 
 	// Case 1: Slice of Response for multiple broadcast
-	if cp.log != nil {
-		cp.log("encodeResultToPacket result type:", reflect.TypeOf(result).String())
-	}
+	cp.log("encodeResultToPacket result type:", reflect.TypeOf(result).String())
 	if responses, ok := result.([]Response); ok {
 		pr.Data = make([][]byte, 0, len(responses))
 		for _, resp := range responses {
