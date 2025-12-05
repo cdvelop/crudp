@@ -1,37 +1,70 @@
 #!/bin/bash
+set -euo pipefail
 
-echo "=========================================="
-echo "Running Stdlib Tests..."
-echo "=========================================="
-go test -v ./...
+NOISE='could not unmarshal event: unknown IPAddressSpace value: Loopback'
+TMPDIR="/tmp/crudp-test-$$"
+mkdir -p "$TMPDIR"
 
-if [ $? -ne 0 ]; then
-    echo "❌ Stdlib tests failed"
-    exit 1
+run_tests() {
+  name="$1"
+  prefix="$2"
+  tags="$3"
+  
+  printf "\n=== %s Tests ===\n" "$name"
+  
+  out="$TMPDIR/${name}.out"
+  cov="$TMPDIR/${name}.cover.out"
+  
+  # Test con coverage en un solo comando
+  rc=0
+  if [ -n "$prefix" ]; then
+    eval "$prefix go test -coverprofile=$cov ./... $tags" > "$out" 2>&1 || rc=$?
+  else
+    go test -coverprofile="$cov" ./... $tags > "$out" 2>&1 || rc=$?
+  fi
+  
+  if [ $rc -ne 0 ]; then
+    printf "❌ FAILED\n\n"
+    if [ -n "$prefix" ]; then
+      eval "$prefix go test -v ./... $tags" 2>&1 | awk '
+        /^--- FAIL:/ { in_fail=1; print; next }
+        /^--- (PASS|SKIP):/ { in_fail=0; next }
+        /^=== RUN/ { next }
+        in_fail && !/'"$NOISE"'/ { print }
+        /^FAIL/ { print }
+      ' || true
+    else
+      go test -v ./... $tags 2>&1 | awk '
+        /^--- FAIL:/ { in_fail=1; print; next }
+        /^--- (PASS|SKIP):/ { in_fail=0; next }
+        /^=== RUN/ { next }
+        in_fail && !/'"$NOISE"'/ { print }
+        /^FAIL/ { print }
+      ' || true
+    fi
+    return $rc
+  fi
+  
+  # Solo mostrar coverage total
+  if [ -f "$cov" ]; then
+    printf "✅ Coverage: "
+    go tool cover -func="$cov" | tail -1 | awk '{print $NF}'
+  else
+    printf "✅ (no coverage data)\n"
+  fi
+}
+
+# Stdlib
+run_tests "Stdlib" "" "" || { rm -rf "$TMPDIR"; exit 1; }
+
+# WASM
+if ! command -v wasmbrowsertest >/dev/null 2>&1; then
+  printf "\n⚠️  wasmbrowsertest not found\nInstall: go install github.com/agnivade/wasmbrowsertest@latest\n"
+  rm -rf "$TMPDIR"
+  exit 1
 fi
 
-echo ""
-echo "=========================================="
-echo "Running WASM Tests..."
-echo "=========================================="
+run_tests "WASM" "GOOS=js GOARCH=wasm" "-tags wasm" || { rm -rf "$TMPDIR"; exit 1; }
 
-# Check if wasmbrowsertest is installed
-if ! command -v wasmbrowsertest &> /dev/null; then
-    echo "⚠️  wasmbrowsertest not found. Install it with:"
-    echo "   go install github.com/agnivade/wasmbrowsertest@latest"
-    echo "   export PATH=\$PATH:\$(go env GOPATH)/bin"
-    exit 1
-fi
-
-# Run WASM tests
-GOOS=js GOARCH=wasm go test -v -tags wasm
-WASM_EXIT_CODE=$?
-
-if [ $WASM_EXIT_CODE -ne 0 ]; then
-    echo ""
-    echo "❌ WASM tests failed"
-    exit 1
-fi
-
-echo ""
-echo "✅ All tests passed!"
+rm -rf "$TMPDIR"
+printf "\n✅ All tests passed!\n"

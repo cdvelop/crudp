@@ -1,0 +1,316 @@
+{"Time":"2025-12-05T11:01:34.145454425-03:00","Action":"start","Package":"github.com/cdvelop/crudp"}
+{"Time":"2025-12-05T11:01:34.145508655-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib"}
+{"Time":"2025-12-05T11:01:34.145512739-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib","Output":"=== RUN   TestBroker_Stdlib\n"}
+{"Time":"2025-12-05T11:01:34.14552458-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation"}
+{"Time":"2025-12-05T11:01:34.145527662-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation","Output":"=== RUN   TestBroker_Stdlib/Consolidation\n"}
+{"Time":"2025-12-05T11:01:34.145531617-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Consolidate_Same_Handler+Action"}
+{"Time":"2025-12-05T11:01:34.145534303-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Consolidate_Same_Handler+Action","Output":"=== RUN   TestBroker_Stdlib/Consolidation/Consolidate_Same_Handler+Action\n"}
+{"Time":"2025-12-05T11:01:34.145539508-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Consolidate_Same_Handler+Action","Output":"--- PASS: TestBroker_Stdlib/Consolidation/Consolidate_Same_Handler+Action (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145542739-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Consolidate_Same_Handler+Action","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145547475-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Handlers_Not_Consolidated"}
+{"Time":"2025-12-05T11:01:34.145550119-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Handlers_Not_Consolidated","Output":"=== RUN   TestBroker_Stdlib/Consolidation/Different_Handlers_Not_Consolidated\n"}
+{"Time":"2025-12-05T11:01:34.145553477-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Handlers_Not_Consolidated","Output":"--- PASS: TestBroker_Stdlib/Consolidation/Different_Handlers_Not_Consolidated (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145556573-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Handlers_Not_Consolidated","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145559555-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Actions_Not_Consolidated"}
+{"Time":"2025-12-05T11:01:34.14556216-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Actions_Not_Consolidated","Output":"=== RUN   TestBroker_Stdlib/Consolidation/Different_Actions_Not_Consolidated\n"}
+{"Time":"2025-12-05T11:01:34.145565351-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Actions_Not_Consolidated","Output":"--- PASS: TestBroker_Stdlib/Consolidation/Different_Actions_Not_Consolidated (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145568333-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation/Different_Actions_Not_Consolidated","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145571561-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation","Output":"--- PASS: TestBroker_Stdlib/Consolidation (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145574715-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Consolidation","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145570344-03:00","Action":"start","Package":"github.com/cdvelop/crudp/example/modules"}
+{"Time":"2025-12-05T11:01:34.145578315-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush"}
+{"Time":"2025-12-05T11:01:34.145591292-03:00","Action":"output","Package":"github.com/cdvelop/crudp/example/modules","Output":"?   \tgithub.com/cdvelop/crudp/example/modules\t[no test files]\n"}
+{"Time":"2025-12-05T11:01:34.145602309-03:00","Action":"start","Package":"github.com/cdvelop/crudp/example/modules/contact"}
+{"Time":"2025-12-05T11:01:34.145607575-03:00","Action":"output","Package":"github.com/cdvelop/crudp/example/modules/contact","Output":"?   \tgithub.com/cdvelop/crudp/example/modules/contact\t[no test files]\n"}
+{"Time":"2025-12-05T11:01:34.145611781-03:00","Action":"skip","Package":"github.com/cdvelop/crudp/example/modules/contact","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145616188-03:00","Action":"start","Package":"github.com/cdvelop/crudp/example/modules/patient"}
+{"Time":"2025-12-05T11:01:34.145619873-03:00","Action":"output","Package":"github.com/cdvelop/crudp/example/modules/patient","Output":"?   \tgithub.com/cdvelop/crudp/example/modules/patient\t[no test files]\n"}
+{"Time":"2025-12-05T11:01:34.145623214-03:00","Action":"skip","Package":"github.com/cdvelop/crudp/example/modules/patient","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.14562767-03:00","Action":"start","Package":"github.com/cdvelop/crudp/example/modules/user"}
+{"Time":"2025-12-05T11:01:34.145631148-03:00","Action":"output","Package":"github.com/cdvelop/crudp/example/modules/user","Output":"?   \tgithub.com/cdvelop/crudp/example/modules/user\t[no test files]\n"}
+{"Time":"2025-12-05T11:01:34.145634182-03:00","Action":"skip","Package":"github.com/cdvelop/crudp/example/modules/user","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145637868-03:00","Action":"start","Package":"github.com/cdvelop/crudp/example/pkg/router"}
+{"Time":"2025-12-05T11:01:34.145641645-03:00","Action":"output","Package":"github.com/cdvelop/crudp/example/pkg/router","Output":"?   \tgithub.com/cdvelop/crudp/example/pkg/router\t[no test files]\n"}
+{"Time":"2025-12-05T11:01:34.14564472-03:00","Action":"skip","Package":"github.com/cdvelop/crudp/example/pkg/router","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145649149-03:00","Action":"start","Package":"github.com/cdvelop/crudp/example/web"}
+{"Time":"2025-12-05T11:01:34.145602943-03:00","Action":"skip","Package":"github.com/cdvelop/crudp/example/modules","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145593925-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush","Output":"=== RUN   TestBroker_Stdlib/Flush\n"}
+{"Time":"2025-12-05T11:01:34.145675684-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Flush_After_BatchWindow"}
+{"Time":"2025-12-05T11:01:34.145695695-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Flush_After_BatchWindow","Output":"=== RUN   TestBroker_Stdlib/Flush/Flush_After_BatchWindow\n"}
+{"Time":"2025-12-05T11:01:34.145705446-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Flush_After_BatchWindow","Output":"--- PASS: TestBroker_Stdlib/Flush/Flush_After_BatchWindow (0.05s)\n"}
+{"Time":"2025-12-05T11:01:34.14571171-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Flush_After_BatchWindow","Elapsed":0.05}
+{"Time":"2025-12-05T11:01:34.145722347-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/FlushNow_Forces_Immediate_Flush"}
+{"Time":"2025-12-05T11:01:34.14572735-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/FlushNow_Forces_Immediate_Flush","Output":"=== RUN   TestBroker_Stdlib/Flush/FlushNow_Forces_Immediate_Flush\n"}
+{"Time":"2025-12-05T11:01:34.145652631-03:00","Action":"output","Package":"github.com/cdvelop/crudp/example/web","Output":"?   \tgithub.com/cdvelop/crudp/example/web\t[no test files]\n"}
+{"Time":"2025-12-05T11:01:34.145733203-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/FlushNow_Forces_Immediate_Flush","Output":"--- PASS: TestBroker_Stdlib/Flush/FlushNow_Forces_Immediate_Flush (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145736651-03:00","Action":"skip","Package":"github.com/cdvelop/crudp/example/web","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.14574004-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/FlushNow_Forces_Immediate_Flush","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145751296-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Empty_Queue_No_Flush"}
+{"Time":"2025-12-05T11:01:34.145754856-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Empty_Queue_No_Flush","Output":"=== RUN   TestBroker_Stdlib/Flush/Empty_Queue_No_Flush\n"}
+{"Time":"2025-12-05T11:01:34.14575932-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Empty_Queue_No_Flush","Output":"--- PASS: TestBroker_Stdlib/Flush/Empty_Queue_No_Flush (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145763007-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush/Empty_Queue_No_Flush","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145766732-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush","Output":"--- PASS: TestBroker_Stdlib/Flush (0.05s)\n"}
+{"Time":"2025-12-05T11:01:34.145769901-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Flush","Elapsed":0.05}
+{"Time":"2025-12-05T11:01:34.14577335-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear"}
+{"Time":"2025-12-05T11:01:34.145776117-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear","Output":"=== RUN   TestBroker_Stdlib/Clear\n"}
+{"Time":"2025-12-05T11:01:34.145778991-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear/Clear_Removes_All"}
+{"Time":"2025-12-05T11:01:34.145781572-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear/Clear_Removes_All","Output":"=== RUN   TestBroker_Stdlib/Clear/Clear_Removes_All\n"}
+{"Time":"2025-12-05T11:01:34.145784698-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear/Clear_Removes_All","Output":"--- PASS: TestBroker_Stdlib/Clear/Clear_Removes_All (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145787848-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear/Clear_Removes_All","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145791061-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear","Output":"--- PASS: TestBroker_Stdlib/Clear (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.14579391-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/Clear","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145796935-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket"}
+{"Time":"2025-12-05T11:01:34.145799584-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket","Output":"=== RUN   TestBroker_Stdlib/EnqueuePacket\n"}
+{"Time":"2025-12-05T11:01:34.145802418-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket/EnqueuePacket_Encodes_Data"}
+{"Time":"2025-12-05T11:01:34.145805153-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket/EnqueuePacket_Encodes_Data","Output":"=== RUN   TestBroker_Stdlib/EnqueuePacket/EnqueuePacket_Encodes_Data\n"}
+{"Time":"2025-12-05T11:01:34.145808751-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket/EnqueuePacket_Encodes_Data","Output":"--- PASS: TestBroker_Stdlib/EnqueuePacket/EnqueuePacket_Encodes_Data (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145812108-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket/EnqueuePacket_Encodes_Data","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145815461-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket","Output":"--- PASS: TestBroker_Stdlib/EnqueuePacket (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145819864-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib/EnqueuePacket","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145822883-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib","Output":"--- PASS: TestBroker_Stdlib (0.05s)\n"}
+{"Time":"2025-12-05T11:01:34.145826301-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBroker_Stdlib","Elapsed":0.05}
+{"Time":"2025-12-05T11:01:34.145833213-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib"}
+{"Time":"2025-12-05T11:01:34.145836055-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib","Output":"=== RUN   TestConfig_Stdlib\n"}
+{"Time":"2025-12-05T11:01:34.145839047-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults"}
+{"Time":"2025-12-05T11:01:34.145841588-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults","Output":"=== RUN   TestConfig_Stdlib/Defaults\n"}
+{"Time":"2025-12-05T11:01:34.145844666-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults/DefaultConfig_Values"}
+{"Time":"2025-12-05T11:01:34.145847323-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults/DefaultConfig_Values","Output":"=== RUN   TestConfig_Stdlib/Defaults/DefaultConfig_Values\n"}
+{"Time":"2025-12-05T11:01:34.145850447-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults/DefaultConfig_Values","Output":"--- PASS: TestConfig_Stdlib/Defaults/DefaultConfig_Values (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145853932-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults/DefaultConfig_Values","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145857098-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults","Output":"--- PASS: TestConfig_Stdlib/Defaults (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145859998-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Defaults","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145862813-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig"}
+{"Time":"2025-12-05T11:01:34.145865482-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig","Output":"=== RUN   TestConfig_Stdlib/NewWithConfig\n"}
+{"Time":"2025-12-05T11:01:34.145868282-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Custom_Config"}
+{"Time":"2025-12-05T11:01:34.145870826-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Custom_Config","Output":"=== RUN   TestConfig_Stdlib/NewWithConfig/Custom_Config\n"}
+{"Time":"2025-12-05T11:01:34.145874043-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Custom_Config","Output":"--- PASS: TestConfig_Stdlib/NewWithConfig/Custom_Config (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145876987-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Custom_Config","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145879765-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Nil_Config_Uses_Defaults"}
+{"Time":"2025-12-05T11:01:34.145882606-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Nil_Config_Uses_Defaults","Output":"=== RUN   TestConfig_Stdlib/NewWithConfig/Nil_Config_Uses_Defaults\n"}
+{"Time":"2025-12-05T11:01:34.145885929-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Nil_Config_Uses_Defaults","Output":"--- PASS: TestConfig_Stdlib/NewWithConfig/Nil_Config_Uses_Defaults (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145890404-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/Nil_Config_Uses_Defaults","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145893256-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/NewDefault"}
+{"Time":"2025-12-05T11:01:34.145895823-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/NewDefault","Output":"=== RUN   TestConfig_Stdlib/NewWithConfig/NewDefault\n"}
+{"Time":"2025-12-05T11:01:34.145898888-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/NewDefault","Output":"--- PASS: TestConfig_Stdlib/NewWithConfig/NewDefault (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145901985-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig/NewDefault","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145905142-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig","Output":"--- PASS: TestConfig_Stdlib/NewWithConfig (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145908007-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/NewWithConfig","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145910846-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger"}
+{"Time":"2025-12-05T11:01:34.145913959-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger","Output":"=== RUN   TestConfig_Stdlib/Logger\n"}
+{"Time":"2025-12-05T11:01:34.145916787-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/Logger_Disabled_By_Default"}
+{"Time":"2025-12-05T11:01:34.145919393-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/Logger_Disabled_By_Default","Output":"=== RUN   TestConfig_Stdlib/Logger/Logger_Disabled_By_Default\n"}
+{"Time":"2025-12-05T11:01:34.145922551-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/Logger_Disabled_By_Default","Output":"--- PASS: TestConfig_Stdlib/Logger/Logger_Disabled_By_Default (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145925588-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/Logger_Disabled_By_Default","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.14592836-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Custom"}
+{"Time":"2025-12-05T11:01:34.145931025-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Custom","Output":"=== RUN   TestConfig_Stdlib/Logger/SetLogger_Custom\n"}
+{"Time":"2025-12-05T11:01:34.145934118-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Custom","Output":"--- PASS: TestConfig_Stdlib/Logger/SetLogger_Custom (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145937333-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Custom","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145940173-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Nil_Restores_NoOp"}
+{"Time":"2025-12-05T11:01:34.145943476-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Nil_Restores_NoOp","Output":"=== RUN   TestConfig_Stdlib/Logger/SetLogger_Nil_Restores_NoOp\n"}
+{"Time":"2025-12-05T11:01:34.145946588-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Nil_Restores_NoOp","Output":"--- PASS: TestConfig_Stdlib/Logger/SetLogger_Nil_Restores_NoOp (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145949458-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger/SetLogger_Nil_Restores_NoOp","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145952657-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger","Output":"--- PASS: TestConfig_Stdlib/Logger (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145957073-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Logger","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.14596058-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec"}
+{"Time":"2025-12-05T11:01:34.145963268-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec","Output":"=== RUN   TestConfig_Stdlib/Codec\n"}
+{"Time":"2025-12-05T11:01:34.14596608-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/Default_Codec_EncodeDecode"}
+{"Time":"2025-12-05T11:01:34.145968661-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/Default_Codec_EncodeDecode","Output":"=== RUN   TestConfig_Stdlib/Codec/Default_Codec_EncodeDecode\n"}
+{"Time":"2025-12-05T11:01:34.145971757-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/Default_Codec_EncodeDecode","Output":"--- PASS: TestConfig_Stdlib/Codec/Default_Codec_EncodeDecode (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.14597467-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/Default_Codec_EncodeDecode","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.145977532-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Custom"}
+{"Time":"2025-12-05T11:01:34.14598017-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Custom","Output":"=== RUN   TestConfig_Stdlib/Codec/SetCodec_Custom\n"}
+{"Time":"2025-12-05T11:01:34.145983206-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Custom","Output":"--- PASS: TestConfig_Stdlib/Codec/SetCodec_Custom (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145986085-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Custom","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.14598918-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Nil_Ignored"}
+{"Time":"2025-12-05T11:01:34.145991871-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Nil_Ignored","Output":"=== RUN   TestConfig_Stdlib/Codec/SetCodec_Nil_Ignored\n"}
+{"Time":"2025-12-05T11:01:34.145994881-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Nil_Ignored","Output":"--- PASS: TestConfig_Stdlib/Codec/SetCodec_Nil_Ignored (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.145997714-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec/SetCodec_Nil_Ignored","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146001195-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec","Output":"--- PASS: TestConfig_Stdlib/Codec (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146004483-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib/Codec","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146007542-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib","Output":"--- PASS: TestConfig_Stdlib (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146010474-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConfig_Stdlib","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146013356-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_BasicFunctionality"}
+{"Time":"2025-12-05T11:01:34.146016022-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_BasicFunctionality","Output":"=== RUN   TestCrudP_BasicFunctionality\n"}
+{"Time":"2025-12-05T11:01:34.146019131-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_BasicFunctionality","Output":"--- PASS: TestCrudP_BasicFunctionality (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146022055-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_BasicFunctionality","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146026614-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse"}
+{"Time":"2025-12-05T11:01:34.14602933-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"=== RUN   TestHandlerInstanceReuse\n"}
+{"Time":"2025-12-05T11:01:34.146032125-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [registered handler: user at index 0]\n"}
+{"Time":"2025-12-05T11:01:34.146034918-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [ProcessBatch called with bytes: 134]\n"}
+{"Time":"2025-12-05T11:01:34.146037874-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [ProcessBatch decoded packets: 1]\n"}
+{"Time":"2025-12-05T11:01:34.146040718-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [processSinglePacket CallHandler success, result type: []crudp.Response]\n"}
+{"Time":"2025-12-05T11:01:34.146043552-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [encodeResultToPacket result type: []crudp.Response]\n"}
+{"Time":"2025-12-05T11:01:34.146046319-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [ProcessBatch called with bytes: 130]\n"}
+{"Time":"2025-12-05T11:01:34.146049258-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [ProcessBatch decoded packets: 1]\n"}
+{"Time":"2025-12-05T11:01:34.146052039-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [processSinglePacket CallHandler success, result type: []crudp.Response]\n"}
+{"Time":"2025-12-05T11:01:34.146056289-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:17: DEBUG: [encodeResultToPacket result type: []crudp.Response]\n"}
+{"Time":"2025-12-05T11:01:34.146059264-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:66: First result: {ID:123 Name:Alice Email:alice@example.com}\n"}
+{"Time":"2025-12-05T11:01:34.146062178-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:69: First user details - Name: 'Alice', Email: 'alice@example.com', ID: 123\n"}
+{"Time":"2025-12-05T11:01:34.146064983-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:86: Second result: {ID:123 Name:Bob Email:bob@example.com}\n"}
+{"Time":"2025-12-05T11:01:34.146067924-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"    debug_shared_test.go:89: Second user details - Name: 'Bob', Email: 'bob@example.com', ID: 123\n"}
+{"Time":"2025-12-05T11:01:34.146071043-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Output":"--- PASS: TestHandlerInstanceReuse (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146073916-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.1460768-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse_KNOWN_LIMITATION"}
+{"Time":"2025-12-05T11:01:34.14607939-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse_KNOWN_LIMITATION","Output":"=== RUN   TestHandlerInstanceReuse_KNOWN_LIMITATION\n"}
+{"Time":"2025-12-05T11:01:34.146083528-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse_KNOWN_LIMITATION","Output":"    debug_shared_test.go:106: Skipping test that demonstrates known limitation - handler instance reuse\n"}
+{"Time":"2025-12-05T11:01:34.146086943-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse_KNOWN_LIMITATION","Output":"--- SKIP: TestHandlerInstanceReuse_KNOWN_LIMITATION (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146089759-03:00","Action":"skip","Package":"github.com/cdvelop/crudp","Test":"TestHandlerInstanceReuse_KNOWN_LIMITATION","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146092476-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestConcurrentHandlerAccess"}
+{"Time":"2025-12-05T11:01:34.146095009-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConcurrentHandlerAccess","Output":"=== RUN   TestConcurrentHandlerAccess\n"}
+{"Time":"2025-12-05T11:01:34.14609795-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConcurrentHandlerAccess","Output":"    debug_shared_test.go:201: Processed user 0: User1 (expected User1)\n"}
+{"Time":"2025-12-05T11:01:34.146100726-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConcurrentHandlerAccess","Output":"    debug_shared_test.go:201: Processed user 1: User2 (expected User2)\n"}
+{"Time":"2025-12-05T11:01:34.146103506-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConcurrentHandlerAccess","Output":"    debug_shared_test.go:201: Processed user 2: User3 (expected User3)\n"}
+{"Time":"2025-12-05T11:01:34.146106623-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestConcurrentHandlerAccess","Output":"--- PASS: TestConcurrentHandlerAccess (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146109905-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestConcurrentHandlerAccess","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146112762-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_BasicFunctionality"}
+{"Time":"2025-12-05T11:01:34.146115503-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_BasicFunctionality","Output":"=== RUN   TestBuildRouter_BasicFunctionality\n"}
+{"Time":"2025-12-05T11:01:34.14611868-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_BasicFunctionality","Output":"--- PASS: TestBuildRouter_BasicFunctionality (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.14612147-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_BasicFunctionality","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146124271-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_CustomRoutes"}
+{"Time":"2025-12-05T11:01:34.146126859-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_CustomRoutes","Output":"=== RUN   TestBuildRouter_CustomRoutes\n"}
+{"Time":"2025-12-05T11:01:34.146129861-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_CustomRoutes","Output":"--- PASS: TestBuildRouter_CustomRoutes (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146132641-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_CustomRoutes","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146135938-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_Middleware"}
+{"Time":"2025-12-05T11:01:34.146138503-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_Middleware","Output":"=== RUN   TestBuildRouter_Middleware\n"}
+{"Time":"2025-12-05T11:01:34.146141549-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_Middleware","Output":"--- PASS: TestBuildRouter_Middleware (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146144272-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_Middleware","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146148549-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MultipleHandlers"}
+{"Time":"2025-12-05T11:01:34.146151136-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MultipleHandlers","Output":"=== RUN   TestBuildRouter_MultipleHandlers\n"}
+{"Time":"2025-12-05T11:01:34.146154203-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MultipleHandlers","Output":"--- PASS: TestBuildRouter_MultipleHandlers (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146157122-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MultipleHandlers","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146160137-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_FullHandler"}
+{"Time":"2025-12-05T11:01:34.14616267-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_FullHandler","Output":"=== RUN   TestBuildRouter_FullHandler\n"}
+{"Time":"2025-12-05T11:01:34.146165748-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_FullHandler","Output":"--- PASS: TestBuildRouter_FullHandler (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146168542-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_FullHandler","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146171421-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MiddlewareOrder"}
+{"Time":"2025-12-05T11:01:34.14617412-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MiddlewareOrder","Output":"=== RUN   TestBuildRouter_MiddlewareOrder\n"}
+{"Time":"2025-12-05T11:01:34.146176912-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MiddlewareOrder","Output":"    env.router_test.go:208: Middleware order test passed (headers set)\n"}
+{"Time":"2025-12-05T11:01:34.146179917-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MiddlewareOrder","Output":"--- PASS: TestBuildRouter_MiddlewareOrder (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146182696-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_MiddlewareOrder","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146185606-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_ApiEndpoint"}
+{"Time":"2025-12-05T11:01:34.146188143-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_ApiEndpoint","Output":"=== RUN   TestBuildRouter_ApiEndpoint\n"}
+{"Time":"2025-12-05T11:01:34.146191146-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_ApiEndpoint","Output":"--- PASS: TestBuildRouter_ApiEndpoint (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146194005-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestBuildRouter_ApiEndpoint","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146196892-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandleBinaryProtocol_MethodNotAllowed"}
+{"Time":"2025-12-05T11:01:34.146199454-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandleBinaryProtocol_MethodNotAllowed","Output":"=== RUN   TestHandleBinaryProtocol_MethodNotAllowed\n"}
+{"Time":"2025-12-05T11:01:34.146202646-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandleBinaryProtocol_MethodNotAllowed","Output":"--- PASS: TestHandleBinaryProtocol_MethodNotAllowed (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146205598-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandleBinaryProtocol_MethodNotAllowed","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146208506-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_ErrorHandling"}
+{"Time":"2025-12-05T11:01:34.146211012-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_ErrorHandling","Output":"=== RUN   TestCrudP_ErrorHandling\n"}
+{"Time":"2025-12-05T11:01:34.14621536-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_ErrorHandling","Output":"--- PASS: TestCrudP_ErrorHandling (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146218097-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestCrudP_ErrorHandling","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146221051-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib"}
+{"Time":"2025-12-05T11:01:34.146223725-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib","Output":"=== RUN   TestHandlers_Stdlib\n"}
+{"Time":"2025-12-05T11:01:34.146226538-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration"}
+{"Time":"2025-12-05T11:01:34.146229524-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration","Output":"=== RUN   TestHandlers_Stdlib/Registration\n"}
+{"Time":"2025-12-05T11:01:34.146232462-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Explicit_HandlerName"}
+{"Time":"2025-12-05T11:01:34.146235147-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Explicit_HandlerName","Output":"=== RUN   TestHandlers_Stdlib/Registration/Explicit_HandlerName\n"}
+{"Time":"2025-12-05T11:01:34.1462382-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Explicit_HandlerName","Output":"--- PASS: TestHandlers_Stdlib/Registration/Explicit_HandlerName (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146241221-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Explicit_HandlerName","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146244153-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Reflection_Name_(snake_case)"}
+{"Time":"2025-12-05T11:01:34.14624687-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Reflection_Name_(snake_case)","Output":"=== RUN   TestHandlers_Stdlib/Registration/Reflection_Name_(snake_case)\n"}
+{"Time":"2025-12-05T11:01:34.146250288-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Reflection_Name_(snake_case)","Output":"--- PASS: TestHandlers_Stdlib/Registration/Reflection_Name_(snake_case) (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.14625334-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Reflection_Name_(snake_case)","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146256497-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Nil_Handler_Error"}
+{"Time":"2025-12-05T11:01:34.146259204-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Nil_Handler_Error","Output":"=== RUN   TestHandlers_Stdlib/Registration/Nil_Handler_Error\n"}
+{"Time":"2025-12-05T11:01:34.146262353-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Nil_Handler_Error","Output":"--- PASS: TestHandlers_Stdlib/Registration/Nil_Handler_Error (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146265281-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Nil_Handler_Error","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146268073-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Multiple_Handlers"}
+{"Time":"2025-12-05T11:01:34.146270814-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Multiple_Handlers","Output":"=== RUN   TestHandlers_Stdlib/Registration/Multiple_Handlers\n"}
+{"Time":"2025-12-05T11:01:34.146275091-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Multiple_Handlers","Output":"--- PASS: TestHandlers_Stdlib/Registration/Multiple_Handlers (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.14627942-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration/Multiple_Handlers","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146282621-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration","Output":"--- PASS: TestHandlers_Stdlib/Registration (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146285515-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Registration","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146288338-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation"}
+{"Time":"2025-12-05T11:01:34.146291044-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation","Output":"=== RUN   TestHandlers_Stdlib/Validation\n"}
+{"Time":"2025-12-05T11:01:34.146293913-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Passes"}
+{"Time":"2025-12-05T11:01:34.146296565-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Passes","Output":"=== RUN   TestHandlers_Stdlib/Validation/Validation_Passes\n"}
+{"Time":"2025-12-05T11:01:34.146299805-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Passes","Output":"--- PASS: TestHandlers_Stdlib/Validation/Validation_Passes (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146302652-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Passes","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146306127-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Fails"}
+{"Time":"2025-12-05T11:01:34.146308869-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Fails","Output":"=== RUN   TestHandlers_Stdlib/Validation/Validation_Fails\n"}
+{"Time":"2025-12-05T11:01:34.146314666-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Fails","Output":"--- PASS: TestHandlers_Stdlib/Validation/Validation_Fails (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146317514-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Validation_Fails","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146321189-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Field_Validation"}
+{"Time":"2025-12-05T11:01:34.146323763-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Field_Validation","Output":"=== RUN   TestHandlers_Stdlib/Validation/Field_Validation\n"}
+{"Time":"2025-12-05T11:01:34.146326804-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Field_Validation","Output":"--- PASS: TestHandlers_Stdlib/Validation/Field_Validation (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146329738-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation/Field_Validation","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146332804-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation","Output":"--- PASS: TestHandlers_Stdlib/Validation (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146335583-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/Validation","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146338416-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD"}
+{"Time":"2025-12-05T11:01:34.146340938-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD","Output":"=== RUN   TestHandlers_Stdlib/CRUD\n"}
+{"Time":"2025-12-05T11:01:34.146343883-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Create_Operation"}
+{"Time":"2025-12-05T11:01:34.146347978-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Create_Operation","Output":"=== RUN   TestHandlers_Stdlib/CRUD/Create_Operation\n"}
+{"Time":"2025-12-05T11:01:34.146351219-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Create_Operation","Output":"--- PASS: TestHandlers_Stdlib/CRUD/Create_Operation (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146354049-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Create_Operation","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146357256-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Read_Operation"}
+{"Time":"2025-12-05T11:01:34.14635992-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Read_Operation","Output":"=== RUN   TestHandlers_Stdlib/CRUD/Read_Operation\n"}
+{"Time":"2025-12-05T11:01:34.146362926-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Read_Operation","Output":"--- PASS: TestHandlers_Stdlib/CRUD/Read_Operation (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146365698-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Read_Operation","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146368623-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Unimplemented_Action"}
+{"Time":"2025-12-05T11:01:34.146371147-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Unimplemented_Action","Output":"=== RUN   TestHandlers_Stdlib/CRUD/Unimplemented_Action\n"}
+{"Time":"2025-12-05T11:01:34.146374445-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Unimplemented_Action","Output":"--- PASS: TestHandlers_Stdlib/CRUD/Unimplemented_Action (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146377408-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Unimplemented_Action","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146380246-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Invalid_Handler_ID"}
+{"Time":"2025-12-05T11:01:34.146382797-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Invalid_Handler_ID","Output":"=== RUN   TestHandlers_Stdlib/CRUD/Invalid_Handler_ID\n"}
+{"Time":"2025-12-05T11:01:34.146385806-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Invalid_Handler_ID","Output":"--- PASS: TestHandlers_Stdlib/CRUD/Invalid_Handler_ID (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146388719-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD/Invalid_Handler_ID","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146391644-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD","Output":"--- PASS: TestHandlers_Stdlib/CRUD (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146394525-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib/CRUD","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146397615-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib","Output":"--- PASS: TestHandlers_Stdlib (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146400819-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestHandlers_Stdlib","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146403497-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib"}
+{"Time":"2025-12-05T11:01:34.146406189-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib","Output":"=== RUN   TestPacketResult_Stdlib\n"}
+{"Time":"2025-12-05T11:01:34.146408945-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType"}
+{"Time":"2025-12-05T11:01:34.146411455-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType","Output":"=== RUN   TestPacketResult_Stdlib/MessageType\n"}
+{"Time":"2025-12-05T11:01:34.146415698-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Success"}
+{"Time":"2025-12-05T11:01:34.146418384-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Success","Output":"=== RUN   TestPacketResult_Stdlib/MessageType/MessageType_Success\n"}
+{"Time":"2025-12-05T11:01:34.14642149-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Success","Output":"--- PASS: TestPacketResult_Stdlib/MessageType/MessageType_Success (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.14642438-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Success","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146427228-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Error"}
+{"Time":"2025-12-05T11:01:34.146429857-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Error","Output":"=== RUN   TestPacketResult_Stdlib/MessageType/MessageType_Error\n"}
+{"Time":"2025-12-05T11:01:34.146432849-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Error","Output":"--- PASS: TestPacketResult_Stdlib/MessageType/MessageType_Error (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146435814-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/MessageType_Error","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146438575-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/Multiple_Data_Responses"}
+{"Time":"2025-12-05T11:01:34.146441104-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/Multiple_Data_Responses","Output":"=== RUN   TestPacketResult_Stdlib/MessageType/Multiple_Data_Responses\n"}
+{"Time":"2025-12-05T11:01:34.146444445-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/Multiple_Data_Responses","Output":"--- PASS: TestPacketResult_Stdlib/MessageType/Multiple_Data_Responses (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146447478-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType/Multiple_Data_Responses","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146450414-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType","Output":"--- PASS: TestPacketResult_Stdlib/MessageType (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146453445-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/MessageType","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146456424-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion"}
+{"Time":"2025-12-05T11:01:34.146458938-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion","Output":"=== RUN   TestPacketResult_Stdlib/ActionConversion\n"}
+{"Time":"2025-12-05T11:01:34.146461694-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/POST"}
+{"Time":"2025-12-05T11:01:34.146464351-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/POST","Output":"=== RUN   TestPacketResult_Stdlib/ActionConversion/POST\n"}
+{"Time":"2025-12-05T11:01:34.146467449-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/POST","Output":"--- PASS: TestPacketResult_Stdlib/ActionConversion/POST (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146470278-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/POST","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146474534-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/GET"}
+{"Time":"2025-12-05T11:01:34.14647709-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/GET","Output":"=== RUN   TestPacketResult_Stdlib/ActionConversion/GET\n"}
+{"Time":"2025-12-05T11:01:34.146480232-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/GET","Output":"--- PASS: TestPacketResult_Stdlib/ActionConversion/GET (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146483153-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/GET","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146485928-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/PUT"}
+{"Time":"2025-12-05T11:01:34.146488466-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/PUT","Output":"=== RUN   TestPacketResult_Stdlib/ActionConversion/PUT\n"}
+{"Time":"2025-12-05T11:01:34.14649154-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/PUT","Output":"--- PASS: TestPacketResult_Stdlib/ActionConversion/PUT (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146498814-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/PUT","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.14650486-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/DELETE"}
+{"Time":"2025-12-05T11:01:34.146508084-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/DELETE","Output":"=== RUN   TestPacketResult_Stdlib/ActionConversion/DELETE\n"}
+{"Time":"2025-12-05T11:01:34.14651229-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/DELETE","Output":"--- PASS: TestPacketResult_Stdlib/ActionConversion/DELETE (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146521262-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/DELETE","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146529953-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/INVALID"}
+{"Time":"2025-12-05T11:01:34.146533661-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/INVALID","Output":"=== RUN   TestPacketResult_Stdlib/ActionConversion/INVALID\n"}
+{"Time":"2025-12-05T11:01:34.146538133-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/INVALID","Output":"--- PASS: TestPacketResult_Stdlib/ActionConversion/INVALID (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146541662-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion/INVALID","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146544742-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion","Output":"--- PASS: TestPacketResult_Stdlib/ActionConversion (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146547619-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/ActionConversion","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146550403-03:00","Action":"run","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting"}
+{"Time":"2025-12-05T11:01:34.146553002-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting","Output":"=== RUN   TestPacketResult_Stdlib/SSERouting\n"}
+{"Time":"2025-12-05T11:01:34.146555794-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting","Output":"    packet_shared_test.go:140: BatchRequest before encoding: {Packets:[{Action:99 HandlerID:0 ReqID:test-sse Data:[]}]}\n"}
+{"Time":"2025-12-05T11:01:34.146560146-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting","Output":"    packet_shared_test.go:141: Packet count: 1\n"}
+{"Time":"2025-12-05T11:01:34.146563048-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting","Output":"    packet_shared_test.go:143: First packet: {Action:99 HandlerID:0 ReqID:test-sse Data:[]}\n"}
+{"Time":"2025-12-05T11:01:34.146565883-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting","Output":"    packet_shared_test.go:149: Encoded batch request: {\"packets\":[{\"action\":99,\"handler_id\":0,\"req_id\":\"test-sse\",\"data\":[]}]}\n"}
+{"Time":"2025-12-05T11:01:34.146569509-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting","Output":"--- PASS: TestPacketResult_Stdlib/SSERouting (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146572468-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib/SSERouting","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146575968-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib","Output":"--- PASS: TestPacketResult_Stdlib (0.00s)\n"}
+{"Time":"2025-12-05T11:01:34.146579205-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Test":"TestPacketResult_Stdlib","Elapsed":0}
+{"Time":"2025-12-05T11:01:34.146582081-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Output":"PASS\n"}
+{"Time":"2025-12-05T11:01:34.146584786-03:00","Action":"output","Package":"github.com/cdvelop/crudp","Output":"ok  \tgithub.com/cdvelop/crudp\t(cached)\n"}
+{"Time":"2025-12-05T11:01:34.146590279-03:00","Action":"pass","Package":"github.com/cdvelop/crudp","Elapsed":0.001}
